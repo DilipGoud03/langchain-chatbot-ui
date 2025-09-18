@@ -8,8 +8,9 @@ export const Routes = {
     // pages
     Presentation: { path: "/" },
     Dashboard: { path: "/dashboard" },
-    Transactions: { path: "/transactions" },
-    Settings: { path: "/settings" },
+    Documents: { path: "/Documents" },
+    User: { path: "/user" },
+    Users: { path: "/users" },
     Upgrade: { path: "/upgrade" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
     ForgotPassword: { path: "/examples/forgot-password" },

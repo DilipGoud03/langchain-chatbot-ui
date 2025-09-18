@@ -12,8 +12,7 @@ import SignIn from "./auth-components/SignIn";
 import SignUp from "./auth-components/SignUp";
 import SignOut from "./auth-components/SignOut";
 import Dashboard from "./dashboard/Dashboard";
-import Transactions from "./pages/Transactions";
-import Settings from "./pages/Settings";
+import Documents from "./pages/Documents";
 import Upgrade from "./pages/Upgrade";
 import BootstrapTables from "./pages/tables/BootstrapTables";
 import NotFoundPage from "./pages/errors/NotFound";
@@ -24,6 +23,8 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
+import Users from "./pages/Users";
+import User from "./pages/User";
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -96,8 +97,9 @@ const App = () => {
 
         {/* Protected Routes with Sidebar */}
         <ProtectedRoute exact path="/dashboard" component={Dashboard} />
-        <ProtectedRoute exact path="/transactions" component={Transactions} />
-        <ProtectedRoute exact path="/settings" component={Settings} />
+        <ProtectedRoute exact path="/documents" component={Documents} />
+        <ProtectedRoute exact path="/users" component={Users} />
+        <ProtectedRoute exact path="/user" component={User} />
         <ProtectedRoute exact path="/upgrade" component={Upgrade} />
         <ProtectedRoute exact path="/bootstrap-tables" component={BootstrapTables} />
         <ProtectedRoute exact path="/sign-out" component={SignOut} />

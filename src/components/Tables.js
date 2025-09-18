@@ -1,14 +1,12 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup, Spinner} from '@themesberg/react-bootstrap';
-import { Link } from 'react-router-dom';
-
-import { Routes } from "../routes";
+import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup, Spinner } from '@themesberg/react-bootstrap';
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
+import api from "./../axios";
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -187,7 +185,7 @@ export const RankingTable = () => {
   );
 };
 
-export const TransactionsTable = () => {
+export const DocumentsTable = () => {
   const totalTransactions = transactions.length;
 
   const TableRow = (props) => {
@@ -291,149 +289,142 @@ export const TransactionsTable = () => {
   );
 };
 
-export const CommandsTable = () => {
-  const TableRow = (props) => {
-    const { name, usage = [], description, link } = props;
-
-    return (
-      <tr>
-        <td className="border-0" style={{ width: '5%' }}>
-          <code>{name}</code>
-        </td>
-        <td className="fw-bold border-0" style={{ width: '5%' }}>
-          <ul className="ps-0">
-            {usage.map(u => (
-              <ol key={u} className="ps-0">
-                <code>{u}</code>
-              </ol>
-            ))}
-          </ul>
-        </td>
-        <td className="border-0" style={{ width: '50%' }}>
-          <pre className="m-0 p-0">{description}</pre>
-        </td>
-        <td className="border-0" style={{ width: '40%' }}>
-          <pre><Card.Link href={link} target="_blank">Read More <FontAwesomeIcon icon={faExternalLinkAlt} className="ms-1" /></Card.Link></pre>
-        </td>
-      </tr>
-    );
-  };
-
-  return (
-    <Card border="light" className="shadow-sm">
-      <Card.Body className="p-0">
-        <Table responsive className="table-centered rounded" style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-          <thead className="thead-light">
-            <tr>
-              <th className="border-0" style={{ width: '5%' }}>Name</th>
-              <th className="border-0" style={{ width: '5%' }}>Usage</th>
-              <th className="border-0" style={{ width: '50%' }}>Description</th>
-              <th className="border-0" style={{ width: '40%' }}>Extra</th>
-            </tr>
-          </thead>
-          <tbody>
-            {commands.map(c => <TableRow key={`command-${c.id}`} {...c} />)}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
-  );
-};
-
-// Mock API URL
-const API_URL = "https://jsonplaceholder.typicode.com/users"; // Replace with your real API
-
 export const UsersTable = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
 
-  // Fetch users from API
+  // Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
+        const res = await api.get(`/user/list?page=${page}`);
+        setUsers(res.data.users || []);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setUsers([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [page]);
+
+  // Delete handler
+  const handleDelete = async (userId) => {
+    try {
+      await api.delete(`/user/${userId}`);
+      setMessage("User deleted successfully.");
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
+    } catch (err) {
+      console.error("Error deleting User:", err);
+      setError(err.response?.data?.detail || "Failed to delete User.");
+    } finally {
+      setTimeout(() => {
+        setMessage("");
+        setError("");
+      }, 3000);
+    }
+  };
 
   const TableRow = ({ user, index }) => {
-    const { name, username, email, company } = user;
+    const role = user.user_type;
+    const statusVariant = role === "admin" ? "success"
+      : role === "employee" ? "warning"
+        : role === "user" ? "danger" : "primary";
+
+    const defaultAddress = user.addresses?.find((addr) => addr.is_default);
 
     return (
       <tr>
         <td>{index + 1}</td>
-        <td><span className="fw-normal">{name}</span></td>
-        <td><span className="fw-normal">{username}</span></td>
-        <td><span className="fw-normal">{email}</span></td>
-        <td><span className="fw-normal">{company?.name}</span></td>
+        <td>{user.name}</td>
+        <td>{user.email}</td>
+        <td className={`fw-normal text-${statusVariant}`} >{user.user_type}</td>
+        {defaultAddress ? (
+          <>
+            <td>{defaultAddress.address}</td>
+            <td>{defaultAddress.city}</td>
+            <td>{defaultAddress.state}</td>
+            <td>{defaultAddress.zip_code}</td>
+          </>
+        ) : (
+          <td colSpan="4" className="text-center text-muted">
+            No Default Address
+          </td>
+        )}
         <td>
-          <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-              </span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <FontAwesomeIcon icon={faEye} className="me-2" /> View Profile
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-              </Dropdown.Item>
-              <Dropdown.Item className="text-danger">
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          {loggedInUser.user_type === "admin" && user.user_type !== "admin" && (
+            <Dropdown.Item className="text-danger" onClick={() => handleDelete(user.id)}>
+              <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+            </Dropdown.Item>
+          )}
         </td>
       </tr>
     );
   };
 
   if (loading) {
-    return <div className="text-center my-5"><Spinner animation="border" variant="primary" /></div>;
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
   }
 
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
+        {message && <div className="alert alert-success">{message}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <Table hover className="user-table align-items-center">
           <thead>
             <tr>
-              <th className="border-bottom">#</th>
-              <th className="border-bottom">Name</th>
-              <th className="border-bottom">Username</th>
-              <th className="border-bottom">Email</th>
-              <th className="border-bottom">Company</th>
-              <th className="border-bottom">Action</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>ZipCode</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user, idx) => (
-              <TableRow key={`user-${user.id}`} user={user} index={idx} />
-            ))}
+            {users.length > 0 ? (
+              users.map((user, idx) => (
+                <TableRow key={`user-${user.id}`} user={user} index={idx} />
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center text-muted">
+                  No users available
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
+
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
           <Nav>
             <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>Previous</Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Next>Next</Pagination.Next>
+              <Pagination.Prev onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
+                Previous
+              </Pagination.Prev>
+              <Pagination.Item active>{page}</Pagination.Item>
+              <Pagination.Next onClick={() => setPage((p) => p + 1)} disabled={users.length === 0}>
+                Next
+              </Pagination.Next>
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            Showing <b>{users.length}</b> out of <b>{users.length}</b> entries
+            Showing <b>{users.length}</b> entries
           </small>
         </Card.Footer>
       </Card.Body>

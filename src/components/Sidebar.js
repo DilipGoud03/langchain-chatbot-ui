@@ -3,7 +3,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartPie, faCog, faHandHoldingUsd, faSignOutAlt, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faChartPie, faCog, faHandHoldingUsd, faSignOutAlt,faUser,faUsers, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -75,13 +75,13 @@ export default (props = {}) => {
                 </div>
 
                 <Nav className="flex-column pt-3 pt-md-0">
-                  <NavItem title="Overview" link={Routes.Dashboard.path} icon={faChartPie} />
-                  <NavItem title="Transactions" icon={faHandHoldingUsd} link={Routes.Transactions.path} />
-                  <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
+                  <NavItem title="profile" icon={faUser} link={Routes.User.path} />
+                  <NavItem title="Dashboard" link={Routes.Dashboard.path} icon={faChartPie} />
+                  <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} />
+                  <NavItem title="Users" icon={faUsers} link={Routes.Users.path} />
                 </Nav>
               </>
             ) : (
-              // Not logged in: Show only home or sign-in link
               <Nav className="flex-column pt-3 pt-md-0">
                 <NavItem title="Home" link="/" icon={faRocket} />
                 <NavItem title="Sign In" link='sign-in' icon={faSignOutAlt} />

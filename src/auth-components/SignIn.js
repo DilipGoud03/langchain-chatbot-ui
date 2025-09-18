@@ -37,6 +37,12 @@ function SignIn() {
     } catch (err) {
       setError(err.response?.data?.detail || "SignIn failed. Please try again.");
     }
+    finally {
+      reset();
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+    }
   };
 
   return (
@@ -53,8 +59,8 @@ function SignIn() {
               <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Sign in to our platform</h3>
+                  {error && <div className="alert alert-danger" style={{ color: "red" }}>{error}</div >}
                 </div>
-                {error && <p style={{ color: "red" }}>{error}</p>}
                 <Form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group id="email" className="mb-4">
                     <Form.Label>Your Email</Form.Label>

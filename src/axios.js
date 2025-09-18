@@ -7,7 +7,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token'); // Get your JWT token from session storage or wherever you store it
-    console.log("=============Tokken=============", token);
+    console.log("=============Token=============", token);
 
     if (token) {
       const parts = token.split('.');
