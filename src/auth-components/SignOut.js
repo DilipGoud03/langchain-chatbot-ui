@@ -1,13 +1,20 @@
-import { BrowserRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function SignOut() {
-    const navigate = BrowserRouter();
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate('/');
-    window.location.reload();
+  const history = useHistory();
+  console.log(localStorage.getItem('token'));
+
+  // clear storage
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  localStorage.clear();
+  sessionStorage.clear();
+
+  history.push("/sign-in");
+
+  window.location.reload();
+
+  return null;
 }
 
 export default SignOut;

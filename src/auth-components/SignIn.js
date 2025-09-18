@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Routes } from "../routes";
 import BgImage from "../assets/img/illustrations/signin.svg";
-import api from './../axios'
+import api from '../axios'
 
 function SignIn() {
   const {
@@ -31,11 +31,10 @@ function SignIn() {
       localStorage.setItem("token", res.data.token);
       const user = await api.get("/user")
       localStorage.setItem("user", JSON.stringify(user.data));
-      navigate("/dashboard");
+      navigate.push("/dashboard");
       setError("");
       window.location.reload()
     } catch (err) {
-
       setError(err.response?.data?.detail || "SignIn failed. Please try again.");
     }
   };
@@ -44,6 +43,11 @@ function SignIn() {
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
+          <p className="text-center">
+            <Card.Link as={Link} to={Routes.Dashboard.path} className="text-gray-700">
+              <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to homepage
+            </Card.Link>
+          </p>
           <Row className="justify-content-center form-bg-image" style={{ backgroundImage: `url(${BgImage})` }}>
             <Col xs={12} className="d-flex align-items-center justify-content-center">
               <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
@@ -58,8 +62,8 @@ function SignIn() {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faEnvelope} />
                       </InputGroup.Text>
-                      <Form.Control autoFocus required type="email" placeholder="example@company.com" 
-                      {...register("email", { required: true })}
+                      <Form.Control autoFocus required type="email" placeholder="example@company.com"
+                        {...register("email", { required: true })}
                       />
                     </InputGroup>
                     {errors.email && (
@@ -99,7 +103,7 @@ function SignIn() {
                 <div className="d-flex justify-content-center align-items-center">
                   <span className="fw-normal">
                     Not registered?
-                    <Card.Link as={Link} to={Routes.SignUp.path} className="fw-bold">
+                    <Card.Link as={Link} to='/sign-up' className="fw-bold">
                       {` Create account `}
                     </Card.Link>
                   </span>
