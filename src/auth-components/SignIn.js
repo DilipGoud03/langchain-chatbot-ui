@@ -1,15 +1,45 @@
 
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Routes } from "../routes";
 import BgImage from "../assets/img/illustrations/signin.svg";
+import api from './../axios'
 
+function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm();
+  const navigate = useHistory();
+  const [error, setError] = useState("");
+  const OnclickRegister = () => {
+    navigate("/register");
+  };
 
-export default () => {
+  const onSubmit = async (data) => {
+    reset()
+    try {
+      const res = await api.post("/user/login", data);
+      localStorage.setItem("token", res.data.token);
+      const user = await api.get("/user")
+      localStorage.setItem("user", JSON.stringify(user.data));
+      navigate("/dashboard");
+      setError("");
+      window.location.reload()
+    } catch (err) {
+
+      setError(err.response?.data?.detail || "SignIn failed. Please try again.");
+    }
+  };
+
   return (
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
@@ -20,15 +50,26 @@ export default () => {
                 <div className="text-center text-md-center mb-4 mt-md-0">
                   <h3 className="mb-0">Sign in to our platform</h3>
                 </div>
-                <Form className="mt-4">
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                <Form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group id="email" className="mb-4">
                     <Form.Label>Your Email</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faEnvelope} />
                       </InputGroup.Text>
-                      <Form.Control autoFocus required type="email" placeholder="example@company.com" />
+                      <Form.Control autoFocus required type="email" placeholder="example@company.com" 
+                      {...register("email", { required: true })}
+                      />
                     </InputGroup>
+                    {errors.email && (
+                      <div
+                        style={{ color: "red" }}
+                        className="form-text"
+                      >
+                        *Email* is mandatory
+                      </div>
+                    )}
                   </Form.Group>
                   <Form.Group>
                     <Form.Group id="password" className="mb-4">
@@ -37,16 +78,15 @@ export default () => {
                         <InputGroup.Text>
                           <FontAwesomeIcon icon={faUnlockAlt} />
                         </InputGroup.Text>
-                        <Form.Control required type="password" placeholder="Password" />
+                        <Form.Control required type="password" placeholder="Password"
+                          {...register("password", { required: true })}
+                        />
+
                       </InputGroup>
+                      {errors.password && (
+                        <span style={{ color: "red" }}>*Password* is mandatory</span>
+                      )}
                     </Form.Group>
-                    <div className="d-flex justify-content-between align-items-center mb-4">
-                      <Form.Check type="checkbox">
-                        <FormCheck.Input id="defaultCheck5" className="me-2" />
-                        <FormCheck.Label htmlFor="defaultCheck5" className="mb-0">Remember me</FormCheck.Label>
-                      </Form.Check>
-                      <Card.Link className="small text-end">Lost password?</Card.Link>
-                    </div>
                   </Form.Group>
                   <Button variant="primary" type="submit" className="w-100">
                     Sign in
@@ -72,3 +112,5 @@ export default () => {
     </main>
   );
 };
+
+export default SignIn;

@@ -4,7 +4,7 @@ import { Routes } from "./routes";
 
 // pages
 import Upgrade from "./pages/Upgrade";
-import DashboardOverview from "./pages/dashboard/DashboardOverview";
+import DashboardOverview from './dashboard/DashboardOverview';
 import Transactions from "./pages/Transactions";
 import Settings from "./pages/Settings";
 import BootstrapTables from "./pages/tables/BootstrapTables";
@@ -20,7 +20,7 @@ import Preloader from "./components/Preloader";
 // new component 
 import SignIn from './auth-components/SignIn';
 import SignUp from './auth-components/SignUp';
-
+import SignOut from './auth-components/SignOut';
 const RouteWithLoader = ({ component: Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -84,6 +84,7 @@ export default () => (
     {/* new component  */}
     <RouteWithLoader exact path={Routes.SignIn} component={SignIn} />
     <RouteWithLoader exact path={Routes.SignUp} component={SignUp} />
+    <RouteWithLoader exact path={Routes.SignOut} component={SignOut} />
 
     <Redirect to={Routes.NotFound.path} />
   </Switch>

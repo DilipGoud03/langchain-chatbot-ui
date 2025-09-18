@@ -1,5 +1,10 @@
 
 export const Routes = {
+    // new component
+    SignIn : {path: "/sign-in"},
+    SignUp: {path: "/sign-up"},
+    SignOut: {path: '/sign-out'},
+
     // pages
     Presentation: { path: "/" },
     DashboardOverview: { path: "/dashboard/overview" },
@@ -7,10 +12,6 @@ export const Routes = {
     Settings: { path: "/settings" },
     Upgrade: { path: "/upgrade" },
     BootstrapTables: { path: "/tables/bootstrap-tables" },
-    Billing: { path: "/examples/billing" },
-    Invoice: { path: "/examples/invoice" },
-    Signin: { path: "/examples/sign-in" },
-    Signup: { path: "/examples/sign-up" },
     ForgotPassword: { path: "/examples/forgot-password" },
     ResetPassword: { path: "/examples/reset-password" },
     Lock: { path: "/examples/lock" },
@@ -46,7 +47,4 @@ export const Routes = {
     Toasts: { path: "/components/toasts" },
     WidgetsComponent: { path: "/components/widgets" },
     
-    // new component
-    SignIn : {path: "/sign-in"},
-    SignUp: {path: "/sign-up"}
 };

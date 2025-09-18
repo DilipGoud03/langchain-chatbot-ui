@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 
 function SignOut() {
-    const navigate = useNavigate();
+    const navigate = BrowserRouter();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.clear();
