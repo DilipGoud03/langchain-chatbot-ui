@@ -6,7 +6,6 @@ export const Routes = {
     SignOut: {path: '/sign-out'},
 
     // pages
-    Presentation: { path: "/" },
     Dashboard: { path: "/dashboard" },
     Documents: { path: "/Documents" },
     User: { path: "/user" },

@@ -13,8 +13,6 @@ import SignUp from "./auth-components/SignUp";
 import SignOut from "./auth-components/SignOut";
 import Dashboard from "./dashboard/Dashboard";
 import Documents from "./pages/Documents";
-import Upgrade from "./pages/Upgrade";
-import BootstrapTables from "./pages/tables/BootstrapTables";
 import NotFoundPage from "./pages/errors/NotFound";
 import ServerError from "./pages/errors/ServerError";
 
@@ -100,8 +98,6 @@ const App = () => {
         <ProtectedRoute exact path="/documents" component={Documents} />
         <ProtectedRoute exact path="/users" component={Users} />
         <ProtectedRoute exact path="/user" component={User} />
-        <ProtectedRoute exact path="/upgrade" component={Upgrade} />
-        <ProtectedRoute exact path="/bootstrap-tables" component={BootstrapTables} />
         <ProtectedRoute exact path="/sign-out" component={SignOut} />
 
         {/* Error pages */}

@@ -186,102 +186,123 @@ export const RankingTable = () => {
 };
 
 export const DocumentsTable = () => {
-  const totalTransactions = transactions.length;
+  const [total, setTotal] = useState(0);
+  const [documents, setDocuments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const TableRow = (props) => {
-    const { invoiceNumber, subscription, price, issueDate, dueDate, status } = props;
-    const statusVariant = status === "Paid" ? "success"
-      : status === "Due" ? "warning"
-        : status === "Canceled" ? "danger" : "primary";
+  // Fetch documents
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const res = await api.get(`/doc/list?page=${page}`);
+        setTotal(res.data.meta.total_items || 0)
+        setDocuments(res.data.documents || []);
+      } catch (err) {
+        console.error("Error fetching documents:", err);
+        setDocuments([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchDocuments();
+  }, [page]);
+
+  // Delete handler
+  const handleDelete = async (userId) => {
+    try {
+      await api.delete(`/user/${userId}`);
+      setMessage("User deleted successfully.");
+      setDocuments((prev) => prev.filter((u) => u.id !== userId));
+    } catch (err) {
+      console.error("Error deleting User:", err);
+      setError(err.response?.data?.detail || "Failed to delete User.");
+    } finally {
+      setTimeout(() => {
+        setMessage("");
+        setError("");
+      }, 3000);
+    }
+  };
+
+  const TableRow = ({ document, index }) => {
+    const role = document.type;
+    const statusVariant = role === "private" ? "success"
+        : role === "public" ? "danger" : "primary";
     return (
       <tr>
+        <td>{index + 1}</td>
+        <td>{document.original_path}</td>
+        <td className={`fw-normal text-${statusVariant}`} >{document.type}</td>
+        <td>{document.created_at}</td>
         <td>
-          <span className="fw-normal">
-            {subscription}
-          </span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            {issueDate}
-          </span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            {dueDate}
-          </span>
-        </td>
-        <td>
-          <span className="fw-normal">
-            ${parseFloat(price).toFixed(2)}
-          </span>
-        </td>
-        <td>
-          <span className={`fw-normal text-${statusVariant}`}>
-            {status}
-          </span>
-        </td>
-        <td>
-          <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
-              <span className="icon icon-sm">
-                <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
-              </span>
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              <Dropdown.Item>
-                <FontAwesomeIcon icon={faEye} className="me-2" /> View Details
-              </Dropdown.Item>
-              <Dropdown.Item>
-                <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-              </Dropdown.Item>
-              <Dropdown.Item className="text-danger">
-                <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Remove
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          {loggedInUser.user_type === "admin" && document.user_type !== "admin" && (
+            <Dropdown.Item className="text-danger" onClick={() => handleDelete(document.id)}>
+              <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+            </Dropdown.Item>
+          )}
         </td>
       </tr>
     );
   };
 
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
   return (
     <Card border="light" className="table-wrapper table-responsive shadow-sm">
       <Card.Body className="pt-0">
-        <Table hover className="user-table align-items-center">
+        {message && <div className="alert alert-success">{message}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
+
+        <Table hover className="document-table align-items-center">
           <thead>
             <tr>
-              <th className="border-bottom">#</th>
-              <th className="border-bottom">Bill For</th>
-              <th className="border-bottom">Issue Date</th>
-              <th className="border-bottom">Due Date</th>
-              <th className="border-bottom">Total</th>
-              <th className="border-bottom">Status</th>
-              <th className="border-bottom">Action</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Uploaded At</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {transactions.map(t => <TableRow key={`transaction-${t.invoiceNumber}`} {...t} />)}
+            {documents.length > 0 ? (
+              documents.map((document, idx) => (
+                <TableRow key={`document-${document.id}`} document={document} index={idx} />
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" className="text-center text-muted">
+                  No documents available
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
+
         <Card.Footer className="px-3 border-0 d-lg-flex align-items-center justify-content-between">
           <Nav>
             <Pagination className="mb-2 mb-lg-0">
-              <Pagination.Prev>
+              <Pagination.Prev onClick={() => setPage((p) => Math.max(p - 1, 1))} disabled={page === 1}>
                 Previous
               </Pagination.Prev>
-              <Pagination.Item active>1</Pagination.Item>
-              <Pagination.Item>2</Pagination.Item>
-              <Pagination.Item>3</Pagination.Item>
-              <Pagination.Item>4</Pagination.Item>
-              <Pagination.Item>5</Pagination.Item>
-              <Pagination.Next>
+              <Pagination.Item active>{page}</Pagination.Item>
+              <Pagination.Next onClick={() => setPage((p) => p + 1)} disabled={documents.length === 0}>
                 Next
               </Pagination.Next>
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            Showing <b>{totalTransactions}</b> out of <b>25</b> entries
+            <b>{documents.length}</b> out of <b>{total}</b>
           </small>
         </Card.Footer>
       </Card.Body>
@@ -290,6 +311,7 @@ export const DocumentsTable = () => {
 };
 
 export const UsersTable = () => {
+  const [total, setTotal] = useState(0);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -302,6 +324,7 @@ export const UsersTable = () => {
     const fetchUsers = async () => {
       try {
         const res = await api.get(`/user/list?page=${page}`);
+        setTotal(res.data.meta.total_items || 0)
         setUsers(res.data.users || []);
       } catch (err) {
         console.error("Error fetching users:", err);
@@ -424,7 +447,7 @@ export const UsersTable = () => {
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            Showing <b>{users.length}</b> entries
+            <b>{users.length}</b> out of <b>{total}</b>
           </small>
         </Card.Footer>
       </Card.Body>

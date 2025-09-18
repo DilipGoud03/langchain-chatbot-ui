@@ -57,6 +57,12 @@ export const GeneralInfoForm = () => {
                 <Form.Control required type="text" placeholder="Enter your home address" />
               </Form.Group>
             </Col>
+            <Col sm={3} className="mb-3">
+              <Form.Group id="isdefault">
+                <Form.Label>Default</Form.Label>
+                <Form.Control required type="text" placeholder="Enter your home address" />
+              </Form.Group>
+            </Col>
           </Row>
           <Row>
             <Col sm={4} className="mb-3">

@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import moment from "moment-timezone";
-import { Row, Col, Card, Button, Form } from '@themesberg/react-bootstrap';
+import { Card, Button, Form } from '@themesberg/react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCogs } from "@fortawesome/free-solid-svg-icons";
-import { Link } from 'react-router-dom';
 
 export default (props) => {
-  const currentYear = moment().get("year");
   const { showSettings, toggleSettings } = props;
 
   // Chat states
@@ -20,7 +16,6 @@ export default (props) => {
     setMessages([...messages, { sender: "user", text: newMessage }]);
     setNewMessage("");
 
-    // Example bot reply
     setTimeout(() => {
       setMessages((prev) => [
         ...prev,
@@ -42,7 +37,6 @@ export default (props) => {
               onClick={() => toggleSettings(false)}
             />
 
-            {/* 👇 Chat Section inside settings card */}
             <Card className="shadow-sm border-0" style={{size:'11px'}}>
               <Card.Header className="bg-primary text-white">
                 💬 Chat Support
@@ -98,7 +92,6 @@ export default (props) => {
         </Card>
       )}
 
-      {/* Footer stays same */}
       <footer className="footer section py-5">
         {/* <Row>
           <Col xs={12} lg={6} className="mb-4 mb-lg-0">
