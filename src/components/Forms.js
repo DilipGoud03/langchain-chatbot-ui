@@ -48,47 +48,63 @@ export const GeneralInfoForm = () => {
               </Form.Group>
             </Col>
           </Row>
-
-          <h5 className="my-4">Address</h5>
-          <Row>
-            <Col sm={9} className="mb-3">
-              <Form.Group id="address">
-                <Form.Label>Address</Form.Label>
-                <Form.Control required type="text" placeholder="Enter your home address" />
-              </Form.Group>
-            </Col>
-            <Col sm={3} className="mb-3">
-              <Form.Group id="isdefault">
-                <Form.Label>Default</Form.Label>
-                <Form.Control required type="text" placeholder="Enter your home address" />
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={4} className="mb-3">
-              <Form.Group id="city">
-                <Form.Label>City</Form.Label>
-                <Form.Control required type="text" placeholder="City" />
-              </Form.Group>
-            </Col>
-            <Col sm={4} className="mb-3">
-              <Form.Group id="state">
-                <Form.Label>State</Form.Label>
-                <Form.Control required type="text" placeholder="State" />
-              </Form.Group>
-            </Col>
-            <Col sm={4}>
-              <Form.Group id="zip">
-                <Form.Label>ZIP</Form.Label>
-                <Form.Control required type="tel" placeholder="ZIP" />
-              </Form.Group>
-            </Col>
-          </Row>
           <div className="mt-3">
             <Button variant="primary" type="submit">Save All</Button>
           </div>
         </Form>
       </Card.Body>
     </Card>
+  );
+};
+
+export const NewAddressForm = () => {
+  
+  return (
+    <Card border="light" className="bg-white shadow-sm mb-4">
+      <Card.Body>
+        <h5 className="my-4">Address</h5>
+        <Row>
+          <Col sm={9} className="mb-3">
+            <Form.Group id="address">
+              <Form.Label>Address</Form.Label>
+              <Form.Control required type="text" placeholder="Enter your home address" />
+            </Form.Group>
+          </Col>
+          <Col sm={3} className="mb-3">
+            <Form.Group id="isdefault">
+              <Form.Label>Default</Form.Label>
+              <Form.Control required type="text" placeholder="Enter your home address" />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={4} className="mb-3">
+            <Form.Group id="city">
+              <Form.Label>City</Form.Label>
+              <Form.Control required type="text" placeholder="City" />
+            </Form.Group>
+          </Col>
+          <Col sm={4} className="mb-3">
+            <Form.Group id="state">
+              <Form.Label>State</Form.Label>
+              <Form.Control required type="text" placeholder="State" />
+            </Form.Group>
+          </Col>
+          <Col sm={4}>
+            <Form.Group id="zip">
+              <Form.Label>ZIP</Form.Label>
+              <Form.Control required type="tel" placeholder="ZIP" />
+            </Form.Group>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
+  );
+};
+
+
+export const EditAddressForm = () => {
+  return (
+    <Card></Card>
   );
 };
