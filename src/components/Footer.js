@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, Button, Form } from '@themesberg/react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import api from "./../axios"
+import api from "./../axios";
 
 export default (props) => {
   const { showChatbot, toggleChatbot } = props;
@@ -11,21 +11,26 @@ export default (props) => {
   const loggedInUser = localStorage.getItem("token");
   const [disabled, setDisabled] = useState(false);
   const [loader, setLoader] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
   useEffect(() => {
     if (loggedInUser) {
       localStorage.setItem("messages", JSON.stringify(messages));
-    };
+    }
   }, [messages, loggedInUser]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loader]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-    setLoader(true)
+    setLoader(true);
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    const data = {
-      query: input
-    }
+    const data = { query: input };
     setInput("");
     try {
       setDisabled(true);
@@ -35,21 +40,16 @@ export default (props) => {
     } catch (err) {
       console.error("API error:", err);
       setError(err.response?.data?.detail || "Failed api response.");
-    }
-    finally {
-      setLoader(false)
+    } finally {
+      setLoader(false);
       setDisabled(false);
-      // setTimeout(() => {
-      //   setError('');
-      // }, 3000);
     }
-
   };
 
   return (
     <div>
       {showChatbot ? (
-        <Card className="theme-chatbot" style={{ width: '23pc' }}>
+        <Card className="theme-chatbot" style={{ width: "23pc" }}>
           <Card.Body className="pt-4">
             <Button
               className="theme-chatbot-close"
@@ -59,7 +59,7 @@ export default (props) => {
               onClick={() => toggleChatbot(false)}
             />
 
-            <Card className="shadow-sm border-0" style={{ size: '11px' }}>
+            <Card className="shadow-sm border-0">
               <Card.Header className="bg-primary text-white">
                 💬 Chat Support
               </Card.Header>
@@ -84,13 +84,19 @@ export default (props) => {
                     </div>
                   </div>
                 ))}
-              </Card.Body>
-                {
-                  loader &&
-                  <div className="spinner-border spinner-border-sm" role="status">
-                    <span className="visually-hidden">Loading...</span>
+
+                {loader && (
+                  <div className="d-flex justify-content-start mb-2">
+                    <div className="p-2 rounded-2 bg-light text-dark">
+                      <div className="spinner-border spinner-border-sm" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    </div>
                   </div>
-                }
+                )}
+
+                <div ref={messagesEndRef} />
+              </Card.Body>
               <Card.Footer className="d-flex">
                 <Form.Control
                   type="text"
@@ -99,7 +105,12 @@ export default (props) => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 />
-                <Button variant="primary" className="ms-2" disabled={disabled} onClick={sendMessage}>
+                <Button
+                  variant="primary"
+                  className="ms-2"
+                  disabled={disabled}
+                  onClick={sendMessage}
+                >
                   Send
                 </Button>
               </Card.Footer>
@@ -117,49 +128,7 @@ export default (props) => {
             </span>
           </Card.Body>
         </Card>
-      )
-      }
-
-      <footer className="footer section py-5">
-        {/* <Row>
-          <Col xs={12} lg={6} className="mb-4 mb-lg-0">
-            <p className="mb-0 text-center text-xl-left">
-              Copyright © 2019-{`${currentYear} `}
-              <Card.Link
-                href="https://themesberg.com"
-                target="_blank"
-                className="text-blue text-decoration-none fw-normal"
-              >
-                Themesberg{" "}
-              </Card.Link>
-              distributed by{" "}
-              <Card.Link
-                href="https://themewagon.com"
-                target="_blank"
-                className="text-blue text-decoration-none fw-normal"
-              >
-                ThemeWagon
-              </Card.Link>
-            </p>
-          </Col>
-          <Col xs={12} lg={6}>
-            <ul className="list-inline list-group-flush list-group-borderless text-center text-xl-right mb-0">
-              <li className="list-inline-item px-0 px-sm-2">
-                <Link href="#">About</Link>
-              </li>
-              <li className="list-inline-item px-0 px-sm-2">
-                <Link href="#">Themes</Link>
-              </li>
-              <li className="list-inline-item px-0 px-sm-2">
-                <Link href="#">Blog</Link>
-              </li>
-              <li className="list-inline-item px-0 px-sm-2">
-                <Link href="#">Contact</Link>
-              </li>
-            </ul>
-          </Col>
-        </Row> */}
-      </footer>
-    </div >
+      )}
+    </div>
   );
 };
