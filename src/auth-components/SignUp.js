@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEnvelope, faUnlockAlt } from "@fortawesome/free-solid-svg-icons";
 import { Col, Row, Form, Card, Button, FormCheck, Container, InputGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useForm } from "react-hook-form";
@@ -58,7 +58,7 @@ export default () => {
                     <Form.Label>Your Full Name</Form.Label>
                     <InputGroup>
                       <InputGroup.Text>
-                        <FontAwesomeIcon icon={faEnvelope} />
+                        <FontAwesomeIcon icon={faUser} />
                       </InputGroup.Text>
                       <Form.Control autoFocus required type="name" placeholder="john due"
                         {...register("name", { required: true })}
@@ -118,7 +118,7 @@ export default () => {
                 <div className="d-flex justify-content-center align-items-center">
                   <span className="fw-normal">
                     Already have an account?
-                    <Card.Link as={Link} to='sign-in' className="fw-bold">
+                    <Card.Link as={Link} to={Routes.SignIn.path} className="fw-bold">
                       {` Login here `}
                     </Card.Link>
                   </span>

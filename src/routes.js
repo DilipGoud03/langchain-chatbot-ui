@@ -1,7 +1,7 @@
 
 export const Routes = {
     // new component
-    SignIn : {path: "/sign-in"},
+    SignIn : {path: "/"},
     SignUp: {path: "/sign-up"},
     SignOut: {path: '/sign-out'},
 

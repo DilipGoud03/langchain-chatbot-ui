@@ -3,8 +3,8 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartPie, faCog, faHandHoldingUsd, faSignOutAlt, faUser, faUsers, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
-import { Nav, Badge, Image, Button, Accordion, Navbar } from '@themesberg/react-bootstrap';
+import { faChartPie, faHandHoldingUsd, faSignOutAlt, faUser, faUsers, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { Nav, Badge, Image, Button,  Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Routes } from "../routes";
@@ -79,7 +79,7 @@ export default (props = {}) => {
                   <NavItem title="profile" icon={faUser} link={Routes.Profile.path} />
                   <NavItem title="Dashboard" link={Routes.Dashboard.path} icon={faChartPie} />
                   <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} />
-                  {loggedInUser.user_type == 'admin' &&
+                  {loggedInUser.user_type === 'admin' &&
                     <NavItem title="Users" icon={faUsers} link={Routes.Users.path} />
                   }
                 </Nav>

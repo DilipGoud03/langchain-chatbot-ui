@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+import { Routes } from "../routes";
 
 function SignOut() {
   const history = useHistory();
@@ -10,7 +11,7 @@ function SignOut() {
   localStorage.clear();
   sessionStorage.clear();
 
-  history.push("/sign-in");
+  history.push(Routes.SignIn.path);
 
   window.location.reload();
 

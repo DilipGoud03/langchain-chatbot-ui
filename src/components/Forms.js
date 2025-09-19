@@ -145,7 +145,7 @@ export const GeneralInfoForm = ({ id }) => {
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="mb-4">
-          {user.id === loggedInUser.id ? "General information" : "Information"}
+          {user.id === loggedInUser.id ? "Profile" : "User Information"}
         </h5>
 
         {error && <div className="alert alert-danger">{error}</div>}

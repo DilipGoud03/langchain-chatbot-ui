@@ -1,26 +1,10 @@
 
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faTrashAlt, faEdit, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEdit, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 import { Nav, Card, Table, Dropdown, Pagination, Spinner, ButtonGroup, Button } from '@themesberg/react-bootstrap';
 import api from "./../axios";
-import { Link, useHistory } from "react-router-dom";
-import { Routes } from "../routes";
-import Profile from "../user-component/Profile";
-
-const ValueChange = ({ value, suffix }) => {
-  const valueIcon = value < 0 ? faAngleDown : faAngleUp;
-  const valueTxtColor = value < 0 ? "text-danger" : "text-success";
-
-  return (
-    value ? <span className={valueTxtColor}>
-      <FontAwesomeIcon icon={valueIcon} />
-      <span className="fw-bold ms-1">
-        {Math.abs(value)}{suffix}
-      </span>
-    </span> : "--"
-  );
-};
+import { useHistory } from "react-router-dom";
 
 
 export const DocumentsTable = () => {

@@ -1,11 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Navbar, Container, NavLink } from '@themesberg/react-bootstrap';
 import { Link } from "react-router-dom";
 import { Routes } from "../routes";
 
-export default () => {
+const Navbars = () => {
   const loggedInUser = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
@@ -16,7 +16,8 @@ export default () => {
           <div className="d-flex justify-content-between w-100">
             <div className="d-flex align-items-center">
               <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                <span className="mb-0 font-small fw-bold"><b>{user.name}</b></span>
+                <FontAwesomeIcon icon={faUser} />
+                <span className="mb-0 font-small fw-bold"><b> {user.name}</b></span>
               </div>
             </div>
             <Nav className="align-items-center">
@@ -32,3 +33,6 @@ export default () => {
     </Navbar>
   );
 };
+
+
+export default Navbars;
