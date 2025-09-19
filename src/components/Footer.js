@@ -1,33 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Button, Form } from '@themesberg/react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import api from "./../axios"
 
 export default (props) => {
   const { showSettings, toggleSettings } = props;
+  const [messages, setMessages] = useState(JSON.parse(localStorage.getItem("messages") || "[]"));
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
+  const loggedInUser = localStorage.getItem("token");
+  const [disabled, setDisabled] = useState(false);
+  const [loader, setLoader] = useState(false);
+  useEffect(() => {
+    if (loggedInUser) {
+      localStorage.setItem("messages", JSON.stringify(messages));
+    };
+  }, [messages, loggedInUser]);
 
-  // Chat states
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "👋 Hi! How can I help you today?" }
-  ]);
-  const [newMessage, setNewMessage] = useState("");
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    setLoader(true)
+    const userMessage = { sender: "user", text: input };
+    setMessages((prev) => [...prev, userMessage]);
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
-    setMessages([...messages, { sender: "user", text: newMessage }]);
-    setNewMessage("");
+    const data = {
+      query: input
+    }
+    setInput("");
+    try {
+      setDisabled(true);
+      const res = await api.post(`/chat-bot`, data);
+      const bot = { sender: "bot", text: res.data || JSON.stringify(res) };
+      setMessages((prev) => [...prev, bot]);
+    } catch (err) {
+      console.error("API error:", err);
+      setError(err.response?.data?.detail || "Failed api response.");
+    }
+    finally {
+      setLoader(false)
+      setDisabled(false);
+      // setTimeout(() => {
+      //   setError('');
+      // }, 3000);
+    }
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "✅ Message received!" }
-      ]);
-    }, 800);
   };
 
   return (
     <div>
       {showSettings ? (
-        <Card className="theme-chatbot">
+        <Card className="theme-chatbot" style={{ width: '23pc' }}>
           <Card.Body className="pt-4">
             <Button
               className="theme-chatbot-close"
@@ -37,42 +59,47 @@ export default (props) => {
               onClick={() => toggleSettings(false)}
             />
 
-            <Card className="shadow-sm border-0" style={{size:'11px'}}>
+            <Card className="shadow-sm border-0" style={{ size: '11px' }}>
               <Card.Header className="bg-primary text-white">
                 💬 Chat Support
               </Card.Header>
               <Card.Body style={{ height: "300px", overflowY: "auto" }}>
+                {error && <div className="alert alert-danger">{error}</div>}
                 {messages.map((msg, i) => (
                   <div
                     key={i}
-                    className={`d-flex mb-2 ${
-                      msg.sender === "user"
-                        ? "justify-content-end"
-                        : "justify-content-start"
-                    }`}
+                    className={`d-flex mb-2 ${msg.sender === "user"
+                      ? "justify-content-end"
+                      : "justify-content-start"
+                      }`}
                   >
                     <div
-                      className={`p-2 rounded-2 ${
-                        msg.sender === "user"
-                          ? "bg-primary text-white"
-                          : "bg-light text-dark"
-                      }`}
+                      className={`p-2 rounded-2 ${msg.sender === "user"
+                        ? "bg-primary text-white"
+                        : "bg-light text-dark"
+                        }`}
                       style={{ maxWidth: "70%" }}
                     >
                       {msg.text}
                     </div>
                   </div>
                 ))}
+                {
+                  loader &&
+                  <div className="spinner-border spinner-border-sm" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                }
               </Card.Body>
               <Card.Footer className="d-flex">
                 <Form.Control
                   type="text"
                   placeholder="Type your message..."
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 />
-                <Button variant="primary" className="ms-2" onClick={sendMessage}>
+                <Button variant="primary" className="ms-2" disabled={disabled} onClick={sendMessage}>
                   Send
                 </Button>
               </Card.Footer>
@@ -90,7 +117,8 @@ export default (props) => {
             </span>
           </Card.Body>
         </Card>
-      )}
+      )
+      }
 
       <footer className="footer section py-5">
         {/* <Row>
@@ -132,6 +160,6 @@ export default (props) => {
           </Col>
         </Row> */}
       </footer>
-    </div>
+    </div >
   );
 };

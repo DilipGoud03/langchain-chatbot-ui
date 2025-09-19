@@ -3,7 +3,7 @@ import SimpleBar from 'simplebar-react';
 import { useLocation } from "react-router-dom";
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartPie, faCog, faHandHoldingUsd, faSignOutAlt,faUser,faUsers, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faChartPie, faCog, faHandHoldingUsd, faSignOutAlt, faUser, faUsers, faTimes, faRocket } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Badge, Image, Button, Accordion, Navbar } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -17,7 +17,8 @@ export default (props = {}) => {
   const [show, setShow] = useState(false);
   const showClass = show ? "show" : "";
 
-  const loggedInUser = localStorage.getItem("token");
+  const isLoggedInUser = localStorage.getItem("token");
+  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   const onCollapse = () => setShow(!show);
 
@@ -56,7 +57,7 @@ export default (props = {}) => {
       <CSSTransition timeout={300} in={show} classNames="sidebar-transition">
         <SimpleBar className={`collapse ${showClass} sidebar d-md-block bg-primary text-white`}>
           <div className="sidebar-inner px-4 pt-3">
-            {loggedInUser ? (
+            {isLoggedInUser ? (
               <>
                 <div className="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
                   <div className="d-flex align-items-center">
@@ -75,10 +76,12 @@ export default (props = {}) => {
                 </div>
 
                 <Nav className="flex-column pt-3 pt-md-0">
-                  <NavItem title="profile" icon={faUser} link={Routes.User.path} />
+                  <NavItem title="profile" icon={faUser} link={Routes.Profile.path} />
                   <NavItem title="Dashboard" link={Routes.Dashboard.path} icon={faChartPie} />
                   <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} />
-                  <NavItem title="Users" icon={faUsers} link={Routes.Users.path} />
+                  {loggedInUser.user_type == 'admin' &&
+                    <NavItem title="Users" icon={faUsers} link={Routes.Users.path} />
+                  }
                 </Nav>
               </>
             ) : (

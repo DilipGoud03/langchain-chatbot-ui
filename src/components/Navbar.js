@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { Nav, Navbar, Container, NavLink } from '@themesberg/react-bootstrap';
 import { Link } from "react-router-dom";
+import { Routes } from "../routes";
 
 export default () => {
   const loggedInUser = localStorage.getItem("token");
@@ -15,22 +16,17 @@ export default () => {
           <div className="d-flex justify-content-between w-100">
             <div className="d-flex align-items-center">
               <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                <span className="mb-0 font-small fw-bold">{user.name}</span>
+                <span className="mb-0 font-small fw-bold"><b>{user.name}</b></span>
               </div>
             </div>
             <Nav className="align-items-center">
-              <NavLink as={Link} className="fw-bold" to='/sign-out'>
+              <NavLink as={Link} className="fw-bold" to={Routes.SignOut.path}>
                 <FontAwesomeIcon icon={faSignOutAlt} className="text-danger me-2" /> Logout
               </NavLink>
             </Nav>
           </div>
         ) : (
-          // Show simple Home page link when not logged in
-          <Nav className="align-items-center">
-            <NavLink as={Link} className="fw-bold" to='/'>
-              Home
-            </NavLink>
-          </Nav>
+          <></>
         )}
       </Container>
     </Navbar>

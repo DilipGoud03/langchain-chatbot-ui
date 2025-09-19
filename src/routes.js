@@ -7,15 +7,13 @@ export const Routes = {
 
     // pages
     Dashboard: { path: "/dashboard" },
-    Documents: { path: "/Documents" },
-    User: { path: "/user" },
+    Documents: { path: "/documents" },
+    DocumentUpload: { path: "/document-upload" },
+    Profile: { path: "/profile" },
+    EditUser: { path: "/edit-user/:id" },
     Users: { path: "/users" },
-    Upgrade: { path: "/upgrade" },
-    BootstrapTables: { path: "/tables/bootstrap-tables" },
-    ForgotPassword: { path: "/examples/forgot-password" },
-    ResetPassword: { path: "/examples/reset-password" },
-    Lock: { path: "/examples/lock" },
-    NotFound: { path: "/examples/404" },
-    ServerError: { path: "/examples/500" },
+    AddUser: { path: "/add-user" },
+    NotFound: { path: "/404" },
+    ServerError: { path: "/500" },
 
 };

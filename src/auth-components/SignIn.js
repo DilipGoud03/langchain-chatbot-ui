@@ -20,10 +20,6 @@ function SignIn() {
   } = useForm();
   const navigate = useHistory();
   const [error, setError] = useState("");
-  const OnclickRegister = () => {
-    navigate("/register");
-  };
-
   const onSubmit = async (data) => {
     reset()
     try {
@@ -31,7 +27,7 @@ function SignIn() {
       localStorage.setItem("token", res.data.token);
       const user = await api.get("/user")
       localStorage.setItem("user", JSON.stringify(user.data));
-      navigate.push("/dashboard");
+      navigate.push(Routes.Dashboard.path);
       setError("");
       window.location.reload()
     } catch (err) {
@@ -49,11 +45,6 @@ function SignIn() {
     <main>
       <section className="d-flex align-items-center my-5 mt-lg-6 mb-lg-5">
         <Container>
-          <p className="text-center">
-            <Card.Link as={Link} to={Routes.Dashboard.path} className="text-gray-700">
-              <FontAwesomeIcon icon={faAngleLeft} className="me-2" /> Back to homepage
-            </Card.Link>
-          </p>
           <Row className="justify-content-center form-bg-image" style={{ backgroundImage: `url(${BgImage})` }}>
             <Col xs={12} className="d-flex align-items-center justify-content-center">
               <div className="bg-white shadow-soft border rounded border-light p-4 p-lg-5 w-100 fmxw-500">
@@ -109,7 +100,7 @@ function SignIn() {
                 <div className="d-flex justify-content-center align-items-center">
                   <span className="fw-normal">
                     Not registered?
-                    <Card.Link as={Link} to='/sign-up' className="fw-bold">
+                    <Card.Link as={Link} to={Routes.SignUp.path} className="fw-bold">
                       {` Create account `}
                     </Card.Link>
                   </span>

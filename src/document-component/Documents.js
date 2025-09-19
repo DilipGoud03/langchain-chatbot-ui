@@ -4,6 +4,8 @@ import { faCheck, faCog, faHome, faSearch } from '@fortawesome/free-solid-svg-ic
 import { Col, Row, Form, Button, ButtonGroup, Breadcrumb, InputGroup, Dropdown } from '@themesberg/react-bootstrap';
 
 import { DocumentsTable } from "../components/Tables";
+import { Routes } from "../routes";
+import { Link } from "react-router-dom";
 
 export default () => {
   return (
@@ -13,21 +15,10 @@ export default () => {
           <h4>Documents</h4>
           <p className="mb-0">Your web analytics dashboard template.</p>
         </div>
+        <div className="mt-3">
+          <Button as={Link} variant="primary" to={Routes.DocumentUpload.path} >Add New</Button>
+        </div>
       </div>
-
-      <div className="table-settings mb-4">
-        <Row className="justify-content-between align-items-center">
-          <Col xs={8} md={6} lg={3} xl={4}>
-            <InputGroup>
-              <InputGroup.Text>
-                <FontAwesomeIcon icon={faSearch} />
-              </InputGroup.Text>
-              <Form.Control type="text" placeholder="Search" />
-            </InputGroup>
-          </Col>
-        </Row>
-      </div>
-
       <DocumentsTable />
     </>
   );

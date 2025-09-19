@@ -1,9 +1,12 @@
 
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faAngleUp, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Nav, Card, Table, Dropdown, Pagination, Spinner } from '@themesberg/react-bootstrap';
+import { faAngleDown, faAngleUp, faTrashAlt, faEdit, faEllipsisH } from '@fortawesome/free-solid-svg-icons';
+import { Nav, Card, Table, Dropdown, Pagination, Spinner, ButtonGroup, Button } from '@themesberg/react-bootstrap';
 import api from "./../axios";
+import { Link, useHistory } from "react-router-dom";
+import { Routes } from "../routes";
+import Profile from "../user-component/Profile";
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -67,7 +70,7 @@ export const DocumentsTable = () => {
   const TableRow = ({ document, index }) => {
     const role = document.type;
     const statusVariant = role === "private" ? "success"
-        : role === "public" ? "danger" : "primary";
+      : role === "public" ? "danger" : "primary";
     return (
       <tr>
         <td>{index + 1}</td>
@@ -153,7 +156,7 @@ export const UsersTable = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
-
+  const history = useHistory()
   // Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
@@ -189,6 +192,11 @@ export const UsersTable = () => {
     }
   };
 
+
+  const handleEdit = (id) => {
+    history.push(`/edit-user/${id}`);
+  };
+
   const TableRow = ({ user, index }) => {
     const role = user.user_type;
     const statusVariant = role === "admin" ? "success"
@@ -217,9 +225,23 @@ export const UsersTable = () => {
         )}
         <td>
           {loggedInUser.user_type === "admin" && user.user_type !== "admin" && (
-            <Dropdown.Item className="text-danger" onClick={() => handleDelete(user.id)}>
-              <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
-            </Dropdown.Item>
+            <>
+              <Dropdown as={ButtonGroup}>
+                <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
+                  <span className="icon icon-sm">
+                    <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
+                  </span>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleEdit(user.id)}>
+                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
+                  </Dropdown.Item>
+                  <Dropdown.Item className="text-danger" onClick={() => handleDelete(user.id)}>
+                    <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
           )}
         </td>
       </tr>
