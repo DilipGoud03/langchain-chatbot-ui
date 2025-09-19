@@ -1,12 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useHistory, useParams } from "react-router-dom";
-import moment from "moment-timezone";
-import Datetime from "react-datetime";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Card, Form, Button, InputGroup } from '@themesberg/react-bootstrap';
+import { Col, Row, Card, Form, Button } from '@themesberg/react-bootstrap';
 import api from './../axios'
 
 
@@ -20,7 +15,7 @@ export const NewUserForm = () => {
   const [error, setError] = useState("");
   const onSubmit = async (data) => {
     try {
-      const res = await api.post(`/user/signup`, data)
+      await api.post(`/user/signup`, data)
       reset();
     } catch (err) {
       setError(err.response?.data?.detail || "Update failed. Please try again.");
@@ -113,6 +108,7 @@ export const GeneralInfoForm = ({ id }) => {
   const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
   const [user, setUser] = useState({});
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const isAdmin = loggedInUser.user_type === "admin";
 
   useEffect(() => {
@@ -135,9 +131,14 @@ export const GeneralInfoForm = ({ id }) => {
   const onSubmit = async (data) => {
     try {
       await api.put(`/user/${user.id}`, data);
-      // optional: refresh or toast
+      setMessage('User updated sucessfully.')
     } catch (err) {
       setError(err.response?.data?.detail || "Update failed. Please try again.");
+    } finally {
+      setTimeout(() => {
+        setMessage('');
+        setError('');
+      }, 3000);
     }
   };
 
@@ -149,6 +150,7 @@ export const GeneralInfoForm = ({ id }) => {
         </h5>
 
         {error && <div className="alert alert-danger">{error}</div>}
+        {message && <div className="alert alert-info">{message}</div>}
 
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row>
@@ -236,8 +238,8 @@ export const NewAddressForm = ({ id }) => {
   const [error, setError] = useState("");
   const onSubmit = async (data) => {
     try {
-      const res = await api.post(`/user/address`, data)
-
+      await api.post(`/user/address`, data)
+      reset();
     } catch (err) {
       setError(err.response?.data?.detail || "Update failed. Please try again.");
     }
@@ -246,75 +248,78 @@ export const NewAddressForm = ({ id }) => {
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="my-4">Address</h5>
-        <Row>
-          <Col sm={9} className="mb-3">
-            <Form.Group id="address">
-              <Form.Label>Address</Form.Label>
-              <Form.Control required type="text" placeholder="Enter your home address"
-                {...register("address", { required: true })}
-              />
-              {errors.address && (
-                <div style={{ color: "red" }} className="form-text">
-                  *Address* is mandatory
-                </div>
-              )}
-            </Form.Group>
-          </Col>
-          <Col sm={3} className="mb-3">
-            <Form.Group id="isdefault">
-              <Form.Label>Default</Form.Label>
-              <Form.Control required type="text" placeholder="Enter your home address"
-                {...register("isdefault", { required: true })}
-              />
-              {errors.name && (
-                <div style={{ color: "red" }} className="form-text">
-                  *Name* is mandatory
-                </div>
-              )}
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={4} className="mb-3">
-            <Form.Group id="city">
-              <Form.Label>City</Form.Label>
-              <Form.Control required type="text" placeholder="City"
-                {...register("name", { required: true })}
-              />
-              {errors.name && (
-                <div style={{ color: "red" }} className="form-text">
-                  *Name* is mandatory
-                </div>
-              )}
-            </Form.Group>
-          </Col>
-          <Col sm={4} className="mb-3">
-            <Form.Group id="state">
-              <Form.Label>State</Form.Label>
-              <Form.Control required type="text" placeholder="State"
-                {...register("name", { required: true })}
-              />
-              {errors.name && (
-                <div style={{ color: "red" }} className="form-text">
-                  *Name* is mandatory
-                </div>
-              )}
-            </Form.Group>
-          </Col>
-          <Col sm={4}>
-            <Form.Group id="zip">
-              <Form.Label>ZIP</Form.Label>
-              <Form.Control required type="tel" placeholder="ZIP"
-                {...register("name", { required: true })}
-              />
-              {errors.name && (
-                <div style={{ color: "red" }} className="form-text">
-                  *Name* is mandatory
-                </div>
-              )}
-            </Form.Group>
-          </Col>
-        </Row>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Row>
+            <Col sm={9} className="mb-3">
+              <Form.Group id="address">
+                <Form.Label>Address</Form.Label>
+                <Form.Control required type="text" placeholder="Enter your home address"
+                  {...register("address", { required: true })}
+                />
+                {errors.address && (
+                  <div style={{ color: "red" }} className="form-text">
+                    *Address* is mandatory
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+            <Col sm={3} className="mb-3">
+              <Form.Group id="isdefault">
+                <Form.Label>Default</Form.Label>
+                <Form.Control required type="text" placeholder="Enter your home address"
+                  {...register("isdefault", { required: true })}
+                />
+                {errors.name && (
+                  <div style={{ color: "red" }} className="form-text">
+                    *Name* is mandatory
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row>
+            <Col sm={4} className="mb-3">
+              <Form.Group id="city">
+                <Form.Label>City</Form.Label>
+                <Form.Control required type="text" placeholder="City"
+                  {...register("name", { required: true })}
+                />
+                {errors.name && (
+                  <div style={{ color: "red" }} className="form-text">
+                    *Name* is mandatory
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+            <Col sm={4} className="mb-3">
+              <Form.Group id="state">
+                <Form.Label>State</Form.Label>
+                <Form.Control required type="text" placeholder="State"
+                  {...register("name", { required: true })}
+                />
+                {errors.name && (
+                  <div style={{ color: "red" }} className="form-text">
+                    *Name* is mandatory
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+            <Col sm={4}>
+              <Form.Group id="zip">
+                <Form.Label>ZIP</Form.Label>
+                <Form.Control required type="tel" placeholder="ZIP"
+                  {...register("name", { required: true })}
+                />
+                {errors.name && (
+                  <div style={{ color: "red" }} className="form-text">
+                    *Name* is mandatory
+                  </div>
+                )}
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
       </Card.Body>
     </Card>
   );
@@ -370,7 +375,7 @@ export const DocumentUploadForm = () => {
       <Card.Body>
         <h5 className="mb-4">Documents information</h5>
         {error && <div className="alert alert-danger" style={{ color: "red" }}>{error}</div >}
-        {error && <div className="alert alert-info" style={{ color: "info" }}>{error}</div >}
+        {message && <div className="alert alert-info" style={{ color: "info" }}>{message}</div >}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row>
             <Col md={6} className="mb-3">

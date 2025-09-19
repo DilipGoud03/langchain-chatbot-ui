@@ -12,6 +12,7 @@ export const Routes = {
     Profile: { path: "/profile" },
     EditUser: { path: "/edit-user/:id" },
     Users: { path: "/users" },
+    UserAddresses: { path: "/user-adresses/:id" },
     AddUser: { path: "/add-user" },
     NotFound: { path: "/404" },
     ServerError: { path: "/500" },

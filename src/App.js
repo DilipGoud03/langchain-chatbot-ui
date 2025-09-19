@@ -12,7 +12,6 @@ import { Routes } from "./routes";
 import SignIn from "./auth-components/SignIn";
 import SignUp from "./auth-components/SignUp";
 import SignOut from "./auth-components/SignOut";
-import Dashboard from "./dashboard/Dashboard";
 import Documents from "./document-component/Documents";
 import Users from "./user-component/Users";
 import User from "./user-component/Profile";
@@ -24,15 +23,17 @@ import ServerError from "./pages/errors/ServerError";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Preloader from "./components/Preloader";import DocumentUpload from "./document-component/DocumentUpload";
+import Preloader from "./components/Preloader";
+import DocumentUpload from "./document-component/DocumentUpload";
+import UserAddresses from "./user-component/UserAdresses";
 ;
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
 const LayoutWithSidebar = ({ Component, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
-  const [showSettings, setShowSettings] = useState(() => {
-    return localStorage.getItem("settingsVisible") !== "false";
+  const [showChatbot, setShowChatbot] = useState(() => {
+    return localStorage.getItem("chatbotVisible") !== "false";
   });
 
   useEffect(() => {
@@ -40,9 +41,9 @@ const LayoutWithSidebar = ({ Component, ...rest }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    localStorage.setItem("settingsVisible", !showSettings);
+  const toggleChatbot = () => {
+    setShowChatbot(!showChatbot);
+    localStorage.setItem("chatbotVisible", !showChatbot);
   };
 
   return (
@@ -52,7 +53,7 @@ const LayoutWithSidebar = ({ Component, ...rest }) => {
       <main className="content">
         <Navbar />
         <Component {...rest} />
-        <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
+        <Footer toggleChatbot={toggleChatbot} showChatbot={showChatbot} />
       </main>
     </>
   );
@@ -75,8 +76,8 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 
 const PublicRoute = ({ component: Component, restricted = false, ...rest }) => {
   const [loaded, setLoaded] = useState(false);
-  const [showSettings, setShowSettings] = useState(() => {
-    return localStorage.getItem("settingsVisible") !== "false";
+  const [showChatbot, setShowChatbot] = useState(() => {
+    return localStorage.getItem("chatbotVisible") !== "false";
   });
 
   useEffect(() => {
@@ -84,20 +85,22 @@ const PublicRoute = ({ component: Component, restricted = false, ...rest }) => {
     return () => clearTimeout(timer);
   }, []);
 
-  const toggleSettings = () => {
-    setShowSettings(!showSettings);
-    localStorage.setItem("settingsVisible", !showSettings);
+  const toggleChatbot = () => {
+    setShowChatbot(!showChatbot);
+    localStorage.setItem("chatbotVisible", !showChatbot);
   };
   return (
     <Route
+
       {...rest}
       render={(props) =>
         isAuthenticated() && restricted ? (
           <Redirect to={Routes.Dashboard.path} />
         ) : (
           <>
+            <Preloader show={!loaded} />
             <Component {...props} />
-            <Footer toggleSettings={toggleSettings} showSettings={showSettings} />
+            <Footer toggleChatbot={toggleChatbot} showChatbot={showChatbot} />
 
           </>
         )
@@ -116,10 +119,10 @@ const App = () => {
         <PublicRoute exact path={Routes.SignUp.path} component={SignUp} restricted />
 
         {/* Protected Routes with Sidebar */}
-        <ProtectedRoute exact path={Routes.Dashboard.path} component={Dashboard} />
-        <ProtectedRoute exact path={Routes.Documents.path} component={Documents} />
+        <ProtectedRoute exact path={Routes.Dashboard.path} component={Documents} />
         <ProtectedRoute exact path={Routes.SignOut.path} component={SignOut} />
         <ProtectedRoute exact path={Routes.Profile.path} component={User} />
+        <ProtectedRoute exact path={Routes.UserAddresses.path} component={UserAddresses} />
         {
           loggedInUser && loggedInUser.user_type === 'admin' &&
           <>

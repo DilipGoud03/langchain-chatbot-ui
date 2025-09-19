@@ -27,7 +27,7 @@ export default () => {
       const res = await api.post("/user/signup", data);
       setError("");
       setMessage("Registration completed");
-      navigate.push('/sign-in');
+      navigate.push(Routes.SignIn.path);
     } catch (err) {
       setError(err.response?.data?.detail || "Something went wrong. Please try again.");
     }
@@ -99,7 +99,7 @@ export default () => {
                       <InputGroup.Text>
                         <FontAwesomeIcon icon={faUnlockAlt} />
                       </InputGroup.Text>
-                      <Form.Control required type="password" placeholder="Password"
+                      <Form.Control required type="password" placeholder="Password1!"
                         {...register("password", { required: true })}
                       />
                       {errors.password && (

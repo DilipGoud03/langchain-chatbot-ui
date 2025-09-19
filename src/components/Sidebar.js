@@ -78,7 +78,7 @@ export default (props = {}) => {
                 <Nav className="flex-column pt-3 pt-md-0">
                   <NavItem title="profile" icon={faUser} link={Routes.Profile.path} />
                   <NavItem title="Dashboard" link={Routes.Dashboard.path} icon={faChartPie} />
-                  <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} />
+                  {/* <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} /> */}
                   {loggedInUser.user_type === 'admin' &&
                     <NavItem title="Users" icon={faUsers} link={Routes.Users.path} />
                   }
@@ -86,8 +86,8 @@ export default (props = {}) => {
               </>
             ) : (
               <Nav className="flex-column pt-3 pt-md-0">
-                <NavItem title="Home" link="/" icon={faRocket} />
-                <NavItem title="Sign In" link='sign-in' icon={faSignOutAlt} />
+                <NavItem title="Home" link={Routes.SignIn.path} icon={faRocket} />
+                <NavItem title="Sign In" link={Routes.SignIn.path} icon={faSignOutAlt} />
               </Nav>
             )}
           </div>

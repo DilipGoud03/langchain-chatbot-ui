@@ -11,6 +11,7 @@ function SignOut() {
   localStorage.clear();
   sessionStorage.clear();
 
+  localStorage.setItem("chatbotVisible",'false');
   history.push(Routes.SignIn.path);
 
   window.location.reload();

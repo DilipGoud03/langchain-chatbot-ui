@@ -79,7 +79,7 @@ function SignIn() {
                         <InputGroup.Text>
                           <FontAwesomeIcon icon={faUnlockAlt} />
                         </InputGroup.Text>
-                        <Form.Control required type="password" placeholder="Password"
+                        <Form.Control required type="password" placeholder="Password1!"
                           {...register("password", { required: true })}
                         />
 

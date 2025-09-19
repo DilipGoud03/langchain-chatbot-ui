@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import api from "./../axios"
 
 export default (props) => {
-  const { showSettings, toggleSettings } = props;
+  const { showChatbot, toggleChatbot } = props;
   const [messages, setMessages] = useState(JSON.parse(localStorage.getItem("messages") || "[]"));
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
@@ -48,7 +48,7 @@ export default (props) => {
 
   return (
     <div>
-      {showSettings ? (
+      {showChatbot ? (
         <Card className="theme-chatbot" style={{ width: '23pc' }}>
           <Card.Body className="pt-4">
             <Button
@@ -56,7 +56,7 @@ export default (props) => {
               variant="close"
               size="sm"
               aria-label="Close"
-              onClick={() => toggleSettings(false)}
+              onClick={() => toggleChatbot(false)}
             />
 
             <Card className="shadow-sm border-0" style={{ size: '11px' }}>
@@ -84,13 +84,13 @@ export default (props) => {
                     </div>
                   </div>
                 ))}
+              </Card.Body>
                 {
                   loader &&
                   <div className="spinner-border spinner-border-sm" role="status">
                     <span className="visually-hidden">Loading...</span>
                   </div>
                 }
-              </Card.Body>
               <Card.Footer className="d-flex">
                 <Form.Control
                   type="text"
@@ -109,7 +109,7 @@ export default (props) => {
       ) : (
         <Card
           className="theme-chatbot theme-chatbot-expand"
-          onClick={() => toggleSettings(true)}
+          onClick={() => toggleChatbot(true)}
         >
           <Card.Body className="p-3 py-2">
             <span className="fw-bold h3">

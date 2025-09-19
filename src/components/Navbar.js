@@ -18,6 +18,7 @@ const Navbars = () => {
               <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                 <FontAwesomeIcon icon={faUser} />
                 <span className="mb-0 font-small fw-bold"><b> {user.name}</b></span>
+                <span className="mb-0 font-small fw-bold"><b> ({user.user_type})</b></span>
               </div>
             </div>
             <Nav className="align-items-center">
