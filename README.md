@@ -21,9 +21,14 @@ Langchain Chatbot UI provides a user-friendly interface for interacting with cha
    ```
 3. **Install dependencies:**
    ```bash
+   rm -rf node_modules package-lock.json
+   ```
+
+4. **Install dependencies:**
+   ```bash
    npm install
    ```
-4. **Start the application:**
+5. **Start the application:**
    ```bash
    npm start
    ```
