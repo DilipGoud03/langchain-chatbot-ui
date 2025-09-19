@@ -63,6 +63,7 @@ export default (props) => {
               <Card.Header className="bg-primary text-white">
                 💬 Chat Support
               </Card.Header>
+
               <Card.Body style={{ height: "300px", overflowY: "auto" }}>
                 {error && <div className="alert alert-danger">{error}</div>}
                 {messages.map((msg, i) => (
@@ -78,7 +79,7 @@ export default (props) => {
                         ? "bg-primary text-white"
                         : "bg-light text-dark"
                         }`}
-                      style={{ maxWidth: "70%" }}
+                      style={{ maxWidth: "90%" }}
                     >
                       {msg.text}
                     </div>
