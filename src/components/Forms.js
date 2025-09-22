@@ -32,7 +32,7 @@ export const NewUserForm = () => {
             <Col md={6} className="mb-3">
               <Form.Group id="fullName">
                 <Form.Label>Full Name</Form.Label>
-                <Form.Control required type="text" placeholder="Enter your full name"
+                <Form.Control required type="text" placeholder="John Doe"
                   {...register("name", { required: false })}
                 />
                 {errors.name && (
@@ -66,6 +66,7 @@ export const NewUserForm = () => {
                 <Form.Label>Email</Form.Label>
                 <Form.Control required type="email"
                   {...register("email", { required: true })}
+                  placeholder="abc@example.com"
                 />
                 {errors.email && (
                   <div
