@@ -111,13 +111,11 @@ export const GeneralInfoForm = ({ id }) => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const isAdmin = loggedInUser.user_type === "admin";
-
   useEffect(() => {
-    const userId = id && id !== "undefined" ? id : loggedInUser.id;
-    if (userId) {
-      fetchUser(userId);
+    if (id) {
+      fetchUser(id);
     }
-  }, [id, loggedInUser.id]);
+  }, [id]);
 
   const fetchUser = async (id) => {
     try {
@@ -131,7 +129,12 @@ export const GeneralInfoForm = ({ id }) => {
 
   const onSubmit = async (data) => {
     try {
-      await api.put(`/user/${user.id}`, data);
+      const response = await api.put(`/user/${user.id}`, data);
+      setUser(response.data);
+      if (response.data.id === loggedInUser.id) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        window.location.reload()
+      }
       setMessage('User updated sucessfully.')
     } catch (err) {
       setError(err.response?.data?.detail || "Update failed. Please try again.");
