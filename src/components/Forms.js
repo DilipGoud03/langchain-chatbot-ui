@@ -175,20 +175,22 @@ export const GeneralInfoForm = ({ id }) => {
             </Col>
           </Row>
 
-          <Row className="align-items-center">
-            <Col md={6} className="mb-3">
-              <Form.Group id="role">
-                <Form.Label>Role</Form.Label>
-                <Form.Select
-                  disabled={!isAdmin}
-                  {...register("user_type", { required: true })}
-                >
-                  <option value="admin">Admin</option>
-                  <option value="employee">Employee</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
+          {
+            loggedInUser.user_type === 'admin' &&
+            <Row className="align-items-center">
+              <Col md={6} className="mb-3">
+                <Form.Group id="role">
+                  <Form.Label>Role</Form.Label>
+                  <Form.Select
+                    {...register("user_type", { required: true })}
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="employee">Employee</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+          }
 
           <Row>
             <Col md={6} className="mb-3">
@@ -312,7 +314,7 @@ export const NewAddressForm = ({ id }) => {
             <Col sm={4}>
               <Form.Group id="zip">
                 <Form.Label>ZIP</Form.Label>
-                <Form.Control required type="tel" placeholder="ZIP"
+                <Form.Control required type="text" placeholder="ZIP"
                   {...register("name", { required: true })}
                 />
                 {errors.name && (
