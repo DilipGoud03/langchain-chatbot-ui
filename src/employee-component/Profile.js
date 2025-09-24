@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from '@themesberg/react-bootstrap';
-import { GeneralInfoForm } from "../components/Forms";
+import { GeneralInfoForm } from "../utility-components/Forms";
 import { useParams } from "react-router-dom";
 
 export default () => {

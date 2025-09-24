@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row} from '@themesberg/react-bootstrap';
-import { NewAddressForm } from "../components/Forms";
+import { NewAddressForm } from "../utility-components/Forms";
 import { useParams } from "react-router-dom";
 
 export default () => {

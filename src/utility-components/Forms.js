@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Col, Row, Card, Form, Button } from '@themesberg/react-bootstrap';
-import api from './../axios'
+import api from '../axios'
 
 
 export const NewEmployeeForm = () => {

@@ -20,10 +20,10 @@ import NotFoundPage from "./pages/errors/NotFound";
 import ServerError from "./pages/errors/ServerError";
 
 // Components
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Preloader from "./components/Preloader";
+import Sidebar from "./utility-components/Sidebar";
+import Navbar from "./utility-components/Navbar";
+import Footer from "./utility-components/Footer";
+import Preloader from "./utility-components/Preloader";
 import DocumentUpload from "./document-component/DocumentUpload";
 import EmployeeAddresses from "./employee-component/EmployeeAdresses";
 

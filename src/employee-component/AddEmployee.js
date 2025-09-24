@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from '@themesberg/react-bootstrap';
-import { NewEmployeeForm } from "../components/Forms";
+import { NewEmployeeForm } from "../utility-components/Forms";
 
 export default () => {
   return (

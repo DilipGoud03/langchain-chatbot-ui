@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, Button, Form } from '@themesberg/react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import api from "./../axios";
+import api from "../axios";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 // import './Chatbot.css';  // Import custom CSS file for responsiveness
 

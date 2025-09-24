@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row} from '@themesberg/react-bootstrap';
-import { DocumentUploadForm } from "../components/Forms";
+import { DocumentUploadForm } from "../utility-components/Forms";
 
 export default () => {
   return (

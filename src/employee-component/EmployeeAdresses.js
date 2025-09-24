@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from '@themesberg/react-bootstrap';
 
-import { EmployeeAddressTable } from "../components/Tables";
+import { EmployeeAddressTable } from "../utility-components/Tables";
 import { Link, useParams } from "react-router-dom";
 import { Routes } from "../routes";
 

@@ -9,7 +9,7 @@ import "./scss/volt.scss";
 import "react-datetime/css/react-datetime.css";
 
 import App from "./App";
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTop from './utility-components/ScrollToTop'
 
 ReactDOM.render(
   <HashRouter>/

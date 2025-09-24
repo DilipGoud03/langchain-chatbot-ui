@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEllipsisH, faAddressBook } from '@fortawesome/free-solid-svg-icons';
 import { Nav, Card, Table, Dropdown, Pagination, Spinner, ButtonGroup, Button } from '@themesberg/react-bootstrap';
-import api from "./../axios";
+import api from "../axios";
 import { Link, useHistory } from "react-router-dom";
 
 
