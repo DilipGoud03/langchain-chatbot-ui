@@ -24,7 +24,7 @@ export default () => {
   const onSubmit = async (data) => {
     try {
       console.log(data)
-      const res = await api.post("/user/signup", data);
+      const res = await api.post("/employee/signup", data);
       setError("");
       setMessage("Registration completed");
       navigate.push(Routes.SignIn.path);

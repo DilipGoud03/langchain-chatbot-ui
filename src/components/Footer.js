@@ -10,17 +10,17 @@ export default (props) => {
   const [messages, setMessages] = useState(JSON.parse(localStorage.getItem("messages") || "[]"));
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
-  const loggedInUser = localStorage.getItem("token");
+  const loggedInEmployee = localStorage.getItem("token");
   const [disabled, setDisabled] = useState(false);
   const [loader, setLoader] = useState(false);
 
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    if (loggedInUser) {
+    if (loggedInEmployee) {
       localStorage.setItem("messages", JSON.stringify(messages));
     }
-  }, [messages, loggedInUser]);
+  }, [messages, loggedInEmployee]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

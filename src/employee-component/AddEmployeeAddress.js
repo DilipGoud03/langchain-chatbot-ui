@@ -5,15 +5,15 @@ import { useParams } from "react-router-dom";
 
 export default () => {
   const { id } = useParams();
-  const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const userId = id && id !== "undefined" ? id : loggedInUser.id;
+  const loggedInEmployee = JSON.parse(localStorage.getItem('employee') || '{}');
+  const EmployeeId = id && id !== "undefined" ? id : loggedInEmployee.id;
   return (
     <>
      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
       </div>
       <Row>
         <Col xs={12}>
-          <NewAddressForm id={userId} />
+          <NewAddressForm id={EmployeeId} />
         </Col>
       </Row>
     </>

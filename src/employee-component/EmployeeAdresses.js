@@ -7,9 +7,9 @@ import { Routes } from "../routes";
 
 export default () => {
   const { id } = useParams();
-  const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
-  const userId = id && id !== "undefined" ? id : loggedInUser.id;
-  console.log("UserId", userId);
+  const loggedInEmployee = JSON.parse(localStorage.getItem('employee') || '{}');
+  const employeeId = id && id !== "undefined" ? id : loggedInEmployee.id;
+  console.log("UserId", employeeId);
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
@@ -21,7 +21,7 @@ export default () => {
           <Button as={Link} variant="primary" to={Routes.AddEmployee.path} >Add New</Button>
         </div>
       </div>
-      <EmployeeAddressTable id={userId} />
+      <EmployeeAddressTable id={employeeId} />
     </>
   );
 };

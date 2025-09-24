@@ -16,7 +16,7 @@ export default (props = {}) => {
   const showClass = show ? "show" : "";
 
   const isLoggedIn = localStorage.getItem("token");
-  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const loggedInEmployee = JSON.parse(localStorage.getItem("employee") || "{}");
 
   const onCollapse = () => setShow(!show);
 
@@ -58,7 +58,7 @@ export default (props = {}) => {
                   <NavItem title="profile" icon={faUser} link={Routes.Profile.path} />
                   <NavItem title="Dashboard" link={Routes.Dashboard.path} icon={faChartPie} />
                   {/* <NavItem title="Documents" icon={faHandHoldingUsd} link={Routes.Documents.path} /> */}
-                  {loggedInUser.user_type === 'admin' &&
+                  {loggedInEmployee.employee_type === 'admin' &&
                     <NavItem title="Employees" icon={faUsers} link={Routes.Employees.path} />
                   }
                 </Nav>

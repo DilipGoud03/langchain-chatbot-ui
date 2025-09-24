@@ -19,7 +19,7 @@ instance.interceptors.request.use(
       const currentTime = Math.floor(Date.now() / 1000);
       if (exp && currentTime >= exp) {
         localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.removeItem("employee");
         localStorage.clear();
         sessionStorage.clear();
         window.location.reload();

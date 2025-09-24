@@ -26,7 +26,6 @@ import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 import DocumentUpload from "./document-component/DocumentUpload";
 import EmployeeAddresses from "./employee-component/EmployeeAdresses";
-;
 
 const isAuthenticated = () => !!localStorage.getItem("token");
 
@@ -110,7 +109,7 @@ const PublicRoute = ({ component: Component, restricted = false, ...rest }) => {
 };
 
 const App = () => {
-  const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const loggedInEmployee = JSON.parse(localStorage.getItem('employee') || '{}');
   return (
     <Router>
       <Switch>
@@ -125,8 +124,8 @@ const App = () => {
         <ProtectedRoute exact path={Routes.EmployeeAddresses.path} component={EmployeeAddresses} />
         <ProtectedRoute exact path={Routes.DocumentUpload.path} component={DocumentUpload} />
         {
-          loggedInUser && loggedInUser.user_type === 'admin' &&
-          <>
+          loggedInEmployee && loggedInEmployee.employee_type === 'admin' &&
+          <>            
             <ProtectedRoute exact path={Routes.Employees.path} component={Employees} />
             <ProtectedRoute exact path={Routes.AddEmployee.path} component={AddEmployee} />
             <ProtectedRoute exact path={Routes.EditEmployee.path} component={Profile} />

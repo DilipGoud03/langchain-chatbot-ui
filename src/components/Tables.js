@@ -14,7 +14,7 @@ export const DocumentsTable = () => {
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const loggedInEmployee = JSON.parse(localStorage.getItem("employee") || "{}");
 
   // Fetch documents
   useEffect(() => {
@@ -35,11 +35,11 @@ export const DocumentsTable = () => {
   }, [page]);
 
   // Delete handler
-  const handleDelete = async (userId) => {
+  const handleDelete = async (employeeId) => {
     try {
-      await api.delete(`/doc/${userId}`);
+      await api.delete(`/doc/${employeeId}`);
       setMessage("Document deleted successfully.");
-      setDocuments((prev) => prev.filter((u) => u.id !== userId));
+      setDocuments((prev) => prev.filter((u) => u.id !== employeeId));
     } catch (err) {
       console.error("Error deleting Document:", err);
       setError(err.response?.data?.detail || "Failed to delete Document.");
@@ -62,7 +62,7 @@ export const DocumentsTable = () => {
         <td className={`fw-normal text-${statusVariant}`} >{document.type}</td>
         <td>{document.created_at}</td>
         <td>
-          {loggedInUser.user_type === "admin" && document.user_type !== "admin" && (
+          {loggedInEmployee.employee_type === "admin" && document.employee_type !== "admin" && (
             <span
                 role="button"
                 onClick={() => handleDelete(document.id)}
@@ -139,37 +139,37 @@ export const DocumentsTable = () => {
 
 export const EmployeesTable = () => {
   const [total, setTotal] = useState(0);
-  const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const loggedInEmployee = JSON.parse(localStorage.getItem("employee") || "{}");
   const history = useHistory()
-  // Fetch users
+  // Fetch employees
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchEmployees = async () => {
       try {
-        const res = await api.get(`/user/list?page=${page}`);
+        const res = await api.get(`/employee/list?page=${page}`);
         setTotal(res.data.meta.total_items || 0)
-        setUsers(res.data.users || []);
+        setEmployees(res.data.employees || []);
       } catch (err) {
-        console.error("Error fetching users:", err);
-        setUsers([]);
+        console.error("Error fetching employees:", err);
+        setEmployees([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchEmployees();
   }, [page]);
 
   // Delete handler
-  const handleDelete = async (userId) => {
+  const handleDelete = async (employeeId) => {
     try {
-      await api.delete(`/user/${userId}`);
+      await api.delete(`/employee/${employeeId}`);
       setMessage("Employee deleted successfully.");
-      setUsers((prev) => prev.filter((u) => u.id !== userId));
+      setEmployees((prev) => prev.filter((u) => u.id !== employeeId));
     } catch (err) {
       console.error("Error deleting Employee:", err);
       setError(err.response?.data?.detail || "Failed to delete Employee.");
@@ -191,19 +191,19 @@ export const EmployeesTable = () => {
     history.push(`/employee-addresses/${id}`);
   };
 
-  const TableRow = ({ user, index }) => {
-    const role = user.user_type;
+  const TableRow = ({ employee, index }) => {
+    const role = employee.employee_type;
     const statusVariant = role === "admin" ? "success"
       : role === "employee" ? "info" : "primary";
 
-    // const defaultAddress = user.addresses?.find((addr) => addr.is_default);
+    // const defaultAddress = employee.addresses?.find((addr) => addr.is_default);
 
     return (
       <tr>
         <td>{index + 1}</td>
-        <td>{user.name}</td>
-        <td>{user.email}</td>
-        <td className={`fw-normal text-${statusVariant}`} >{user.user_type}</td>
+        <td>{employee.name}</td>
+        <td>{employee.email}</td>
+        <td className={`fw-normal text-${statusVariant}`} >{employee.employee_type}</td>
         {/* {defaultAddress ? (
           <>
             <td>{defaultAddress.address}</td>
@@ -217,11 +217,11 @@ export const EmployeesTable = () => {
           </td>
         )} */}
         <td>
-          {loggedInUser.user_type === "admin" && user.user_type !== "admin" && (
+          {loggedInEmployee.employee_type === "admin" && employee.employee_type !== "admin" && (
             <>
               <span
                 role="button"
-                onClick={() => handleEdit(user.id)}
+                onClick={() => handleEdit(employee.id)}
                 className="text-primary me-2"
                 style={{ cursor: "pointer" }}
               >
@@ -230,13 +230,13 @@ export const EmployeesTable = () => {
 
               <span
                 role="button"
-                onClick={() => handleDelete(user.id)}
+                onClick={() => handleDelete(employee.id)}
                 className="text-danger"
                 style={{ cursor: "pointer" }}
               >
                 <FontAwesomeIcon icon={faTrashAlt} /> Delete
               </span>
-              {/* <Dropdown.Item onClick={() => ViewAddresses(user.id)}>
+              {/* <Dropdown.Item onClick={() => ViewAddresses(employee.id)}>
                     <FontAwesomeIcon icon={faAddressBook} className="me-2" /> View Addresses
                   </Dropdown.Item> */}
               {/* <Dropdown as={ButtonGroup}>
@@ -270,7 +270,7 @@ export const EmployeesTable = () => {
         {message && <div className="alert alert-success">{message}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 
-        <Table hover className="user-table align-items-center">
+        <Table hover className="employee-table align-items-center">
           <thead>
             <tr>
               <th>#</th>
@@ -285,14 +285,14 @@ export const EmployeesTable = () => {
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
-              users.map((user, idx) => (
-                <TableRow key={`user-${user.id}`} user={user} index={idx} />
+            {employees.length > 0 ? (
+              employees.map((employee, idx) => (
+                <TableRow key={`employee-${employee.id}`} employee={employee} index={idx} />
               ))
             ) : (
               <tr>
                 <td colSpan="9" className="text-center text-muted">
-                  No users available
+                  No employees available
                 </td>
               </tr>
             )}
@@ -306,13 +306,13 @@ export const EmployeesTable = () => {
                 Previous
               </Pagination.Prev>
               <Pagination.Item active>{page}</Pagination.Item>
-              <Pagination.Next onClick={() => setPage((p) => p + 1)} disabled={users.length === 0}>
+              <Pagination.Next onClick={() => setPage((p) => p + 1)} disabled={employees.length === 0}>
                 Next
               </Pagination.Next>
             </Pagination>
           </Nav>
           <small className="fw-bold">
-            <b>{users.length}</b> out of <b>{total}</b>
+            <b>{employees.length}</b> out of <b>{total}</b>
           </small>
         </Card.Footer>
       </Card.Body>
@@ -327,13 +327,13 @@ export const EmployeeAddressTable = (useId) => {
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
+  const loggedInEmployee = JSON.parse(localStorage.getItem("employee") || "{}");
   const history = useHistory()
   // Fetch addresses
   useEffect(() => {
-    const fetchUserAddresses = async () => {
+    const fetchEmployeeAddresses = async () => {
       try {
-        const res = await api.get(`/user/${useId}/address/list`);
+        const res = await api.get(`/employee/${useId}/address/list`);
         setTotal(res.data.meta.total_items || 0)
         setUserAddresses(res.data.addresses || []);
       } catch (err) {
@@ -344,15 +344,15 @@ export const EmployeeAddressTable = (useId) => {
       }
     };
 
-    fetchUserAddresses();
+    fetchEmployeeAddresses();
   }, [useId, page]);
 
   // Delete handler
-  const handleDelete = async (userId) => {
+  const handleDelete = async (employeeId) => {
     try {
-      await api.delete(`/user/${userId}`);
+      await api.delete(`/employee/${employeeId}`);
       setMessage("Address deleted successfully.");
-      setUserAddresses((prev) => prev.filter((u) => u.id !== userId));
+      setUserAddresses((prev) => prev.filter((u) => u.id !== employeeId));
     } catch (err) {
       console.error("Error deleting address:", err);
       setError(err.response?.data?.detail || "Failed to delete address.");
@@ -365,14 +365,14 @@ export const EmployeeAddressTable = (useId) => {
   };
 
   const handleEdit = (id) => {
-    history.push(`/edit-user-address/${id}`);
+    history.push(`/edit-employee-address/${id}`);
   };
 
   const TableRow = ({ address, index }) => {
-    const role = address.user_type;
+    const role = address.employee_type;
     const statusVariant = role === "admin" ? "success"
       : role === "employee" ? "warning"
-        : role === "user" ? "danger" : "primary";
+        : role === "employee" ? "danger" : "primary";
 
     return (
       <tr>
@@ -381,7 +381,7 @@ export const EmployeeAddressTable = (useId) => {
         <td>{address.city}</td>
         <td>{address.state}</td>
         <td>{address.zip_code}</td>
-        <td className={`fw-normal text-${statusVariant}`} >{address.user_type}</td>
+        <td className={`fw-normal text-${statusVariant}`} >{address.employee_type}</td>
         <td>
           <>
             <Dropdown as={ButtonGroup}>
@@ -419,7 +419,7 @@ export const EmployeeAddressTable = (useId) => {
         {message && <div className="alert alert-success">{message}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 
-        <Table hover className="user-table align-items-center">
+        <Table hover className="employee-table align-items-center">
           <thead>
             <tr>
               <th>#</th>

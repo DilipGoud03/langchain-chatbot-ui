@@ -16,7 +16,7 @@ export const NewEmployeeForm = () => {
   const [message, setMessage] = useState("");
   const onSubmit = async (data) => {
     try {
-      await api.post(`/user/signup`, data)
+      await api.post(`/employee/signup`, data)
       setMessage("Employee added successfully.")
       reset();
     } catch (err) {
@@ -60,7 +60,7 @@ export const NewEmployeeForm = () => {
                 <Form.Label>Role</Form.Label>
                 <Form.Select
                   defaultValue='employee'
-                  {...register("user_type", { required: true })}
+                  {...register("employee_type", { required: true })}
                 >
                   <option value="admin">Admin</option>
                   <option value="employee">Employee</option>
@@ -114,11 +114,11 @@ export const GeneralInfoForm = ({ id }) => {
     reset
   } = useForm();
 
-  const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}");
-  const [user, setUser] = useState({});
+  const loggedInEmployee = JSON.parse(localStorage.getItem("employee") || "{}");
+  const [employee, setUser] = useState({});
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const isAdmin = loggedInUser.user_type === "admin";
+  const isAdmin = loggedInEmployee.employee_type === "admin";
   useEffect(() => {
     if (id) {
       fetchUser(id);
@@ -127,7 +127,7 @@ export const GeneralInfoForm = ({ id }) => {
 
   const fetchUser = async (id) => {
     try {
-      const response = await api.get(`/user/${id}`);
+      const response = await api.get(`/employee/${id}`);
       setUser(response.data);
       reset(response.data);
     } catch (error) {
@@ -137,10 +137,10 @@ export const GeneralInfoForm = ({ id }) => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.put(`/user/${user.id}`, data);
+      const response = await api.put(`/employee/${employee.id}`, data);
       setUser(response.data);
-      if (response.data.id === loggedInUser.id) {
-        localStorage.setItem("user", JSON.stringify(response.data));
+      if (response.data.id === loggedInEmployee.id) {
+        localStorage.setItem("employee", JSON.stringify(response.data));
         window.location.reload()
       }
       setMessage('Employee updated sucessfully.')
@@ -158,7 +158,7 @@ export const GeneralInfoForm = ({ id }) => {
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="mb-4">
-          {user.id === loggedInUser.id ? "Profile" : "Employee Information"}
+          {employee.id === loggedInEmployee.id ? "Profile" : "Employee Information"}
         </h5>
 
         {error && <div className="alert alert-danger">{error}</div>}
@@ -184,13 +184,13 @@ export const GeneralInfoForm = ({ id }) => {
           </Row>
 
           {
-            loggedInUser.user_type === 'admin' &&
+            loggedInEmployee.employee_type === 'admin' &&
             <Row className="align-items-center">
               <Col md={6} className="mb-3">
                 <Form.Group id="role">
                   <Form.Label>Role</Form.Label>
                   <Form.Select
-                    {...register("user_type", { required: true })}
+                    {...register("employee_type", { required: true })}
                   >
                     <option value="admin">Admin</option>
                     <option value="employee">Employee</option>
@@ -252,7 +252,7 @@ export const NewAddressForm = ({ id }) => {
   const [error, setError] = useState("");
   const onSubmit = async (data) => {
     try {
-      await api.post(`/user/address`, data)
+      await api.post(`/employee/address`, data)
       reset();
     } catch (err) {
       setError(err.response?.data?.detail || "New address create failed. Please try again.");

@@ -7,7 +7,7 @@ function SignOut() {
 
   // clear storage
   localStorage.removeItem("token");
-  localStorage.removeItem("user");
+  localStorage.removeItem("employee");
   localStorage.clear();
   sessionStorage.clear();
 

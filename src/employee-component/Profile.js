@@ -5,10 +5,10 @@ import { useParams } from "react-router-dom";
 
 export default () => {
   const { id } = useParams();
-  const loggedInUser = JSON.parse(localStorage.getItem('user') || '{}');
-  let userId = id && id !== "undefined" ? id : loggedInUser.id;
-  if (loggedInUser.user_type !== 'admin') {
-    userId = loggedInUser.id
+  const loggedInEmployee = JSON.parse(localStorage.getItem('employee') || '{}');
+  let employeeId = id && id !== "undefined" ? id : loggedInEmployee.id;
+  if (loggedInEmployee.employee_type !== 'admin') {
+    employeeId = loggedInEmployee.id
   }
   return (
     <>
@@ -16,7 +16,7 @@ export default () => {
       </div>
       <Row>
         <Col xs={12}>
-          <GeneralInfoForm id={userId} />
+          <GeneralInfoForm id={employeeId} />
         </Col>
       </Row>
     </>

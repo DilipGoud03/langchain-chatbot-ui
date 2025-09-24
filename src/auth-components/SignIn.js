@@ -23,10 +23,10 @@ function SignIn() {
   const onSubmit = async (data) => {
     reset()
     try {
-      const res = await api.post("/user/login", data);
+      const res = await api.post("/employee/login", data);
       localStorage.setItem("token", res.data.token);
-      const user = await api.get("/user")
-      localStorage.setItem("user", JSON.stringify(user.data));
+      const employee = await api.get("/employee")
+      localStorage.setItem("employee", JSON.stringify(employee.data));
       navigate.push(Routes.Dashboard.path);
       setError("");
       window.location.reload()
