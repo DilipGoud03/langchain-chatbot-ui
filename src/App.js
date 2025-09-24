@@ -13,9 +13,9 @@ import SignIn from "./auth-components/SignIn";
 import SignUp from "./auth-components/SignUp";
 import SignOut from "./auth-components/SignOut";
 import Documents from "./document-component/Documents";
-import Users from "./user-component/Users";
-import User from "./user-component/Profile";
-import AddUser from "./user-component/AddUser"
+import Employees from "./employee-component/Employees";
+import User from "./employee-component/Profile";
+import AddUser from "./employee-component/AddEmployee"
 import NotFoundPage from "./pages/errors/NotFound";
 import ServerError from "./pages/errors/ServerError";
 
@@ -25,7 +25,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Preloader from "./components/Preloader";
 import DocumentUpload from "./document-component/DocumentUpload";
-import UserAddresses from "./user-component/UserAdresses";
+import UserAddresses from "./employee-component/EmployeeAdresses";
 ;
 
 const isAuthenticated = () => !!localStorage.getItem("token");
@@ -123,13 +123,13 @@ const App = () => {
         <ProtectedRoute exact path={Routes.SignOut.path} component={SignOut} />
         <ProtectedRoute exact path={Routes.Profile.path} component={User} />
         <ProtectedRoute exact path={Routes.UserAddresses.path} component={UserAddresses} />
+        <ProtectedRoute exact path={Routes.DocumentUpload.path} component={DocumentUpload} />
         {
           loggedInUser && loggedInUser.user_type === 'admin' &&
           <>
-            <ProtectedRoute exact path={Routes.Users.path} component={Users} />
+            <ProtectedRoute exact path={Routes.Employees.path} component={Employees} />
             <ProtectedRoute exact path={Routes.AddUser.path} component={AddUser} />
-            <ProtectedRoute exact path={Routes.EditUser.path} component={User} />
-            <ProtectedRoute exact path={Routes.DocumentUpload.path} component={DocumentUpload} />
+            <ProtectedRoute exact path={Routes.EditEmployee.path} component={User} />
           </>
         }
 

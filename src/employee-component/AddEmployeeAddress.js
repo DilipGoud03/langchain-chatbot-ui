@@ -9,6 +9,8 @@ export default () => {
   const userId = id && id !== "undefined" ? id : loggedInUser.id;
   return (
     <>
+     <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
+      </div>
       <Row>
         <Col xs={12}>
           <NewAddressForm id={userId} />

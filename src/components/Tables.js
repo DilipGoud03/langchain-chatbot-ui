@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEllipsisH, faAddressBook } from '@fortawesome/free-solid-svg-icons';
 import { Nav, Card, Table, Dropdown, Pagination, Spinner, ButtonGroup, Button } from '@themesberg/react-bootstrap';
 import api from "./../axios";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 
 export const DocumentsTable = () => {
@@ -54,7 +54,7 @@ export const DocumentsTable = () => {
   const TableRow = ({ document, index }) => {
     const role = document.type;
     const statusVariant = role === "private" ? "success"
-      : role === "public" ? "danger" : "primary";
+      : role === "public" ? "info" : "primary";
     return (
       <tr>
         <td>{index + 1}</td>
@@ -63,9 +63,14 @@ export const DocumentsTable = () => {
         <td>{document.created_at}</td>
         <td>
           {loggedInUser.user_type === "admin" && document.user_type !== "admin" && (
-            <Dropdown.Item className="text-danger" onClick={() => handleDelete(document.id)}>
-              <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
-            </Dropdown.Item>
+            <span
+                role="button"
+                onClick={() => handleDelete(document.id)}
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} /> Delete
+              </span>
           )}
         </td>
       </tr>
@@ -132,7 +137,7 @@ export const DocumentsTable = () => {
   );
 };
 
-export const UsersTable = () => {
+export const EmployeesTable = () => {
   const [total, setTotal] = useState(0);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -163,11 +168,11 @@ export const UsersTable = () => {
   const handleDelete = async (userId) => {
     try {
       await api.delete(`/user/${userId}`);
-      setMessage("User deleted successfully.");
+      setMessage("Employee deleted successfully.");
       setUsers((prev) => prev.filter((u) => u.id !== userId));
     } catch (err) {
-      console.error("Error deleting User:", err);
-      setError(err.response?.data?.detail || "Failed to delete User.");
+      console.error("Error deleting Employee:", err);
+      setError(err.response?.data?.detail || "Failed to delete Employee.");
     } finally {
       setTimeout(() => {
         setMessage("");
@@ -178,19 +183,18 @@ export const UsersTable = () => {
 
 
   const handleEdit = (id) => {
-    history.push(`/edit-user/${id}`);
+    history.push(`/edit-employee/${id}`);
   };
 
   const ViewAddresses = (id) => {
     console.log("ViewAddresses");
-    history.push(`/user-addresses/${id}`);
+    history.push(`/employee-addresses/${id}`);
   };
 
   const TableRow = ({ user, index }) => {
     const role = user.user_type;
     const statusVariant = role === "admin" ? "success"
-      : role === "employee" ? "danger"
-        : role === "user" ? "danger" : "primary";
+      : role === "employee" ? "info" : "primary";
 
     // const defaultAddress = user.addresses?.find((addr) => addr.is_default);
 
@@ -215,24 +219,36 @@ export const UsersTable = () => {
         <td>
           {loggedInUser.user_type === "admin" && user.user_type !== "admin" && (
             <>
-              <Dropdown as={ButtonGroup}>
+              <span
+                role="button"
+                onClick={() => handleEdit(user.id)}
+                className="text-primary me-2"
+                style={{ cursor: "pointer" }}
+              >
+                <FontAwesomeIcon icon={faEdit} /> Edit
+              </span>
+
+              <span
+                role="button"
+                onClick={() => handleDelete(user.id)}
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+              >
+                <FontAwesomeIcon icon={faTrashAlt} /> Delete
+              </span>
+              {/* <Dropdown.Item onClick={() => ViewAddresses(user.id)}>
+                    <FontAwesomeIcon icon={faAddressBook} className="me-2" /> View Addresses
+                  </Dropdown.Item> */}
+              {/* <Dropdown as={ButtonGroup}>
                 <Dropdown.Toggle as={Button} split variant="link" className="text-dark m-0 p-0">
                   <span className="icon icon-sm">
                     <FontAwesomeIcon icon={faEllipsisH} className="icon-dark" />
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleEdit(user.id)}>
-                    <FontAwesomeIcon icon={faEdit} className="me-2" /> Edit
-                  </Dropdown.Item>
-                  {/* <Dropdown.Item onClick={() => ViewAddresses(user.id)}>
-                    <FontAwesomeIcon icon={faAddressBook} className="me-2" /> View Addresses
-                  </Dropdown.Item> */}
-                  <Dropdown.Item className="text-danger" onClick={() => handleDelete(user.id)}>
-                    <FontAwesomeIcon icon={faTrashAlt} className="me-2" /> Delete
-                  </Dropdown.Item>
+                  
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown> */}
             </>
           )}
         </td>
@@ -304,7 +320,7 @@ export const UsersTable = () => {
   );
 };
 
-export const UserAddressTable = (useId) => {
+export const EmployeeAddressTable = (useId) => {
   const [total, setTotal] = useState(0);
   const [addresses, setUserAddresses] = useState([]);
   const [loading, setLoading] = useState(true);

@@ -10,10 +10,10 @@ export const Routes = {
     Documents: { path: "/documents" },
     DocumentUpload: { path: "/document-upload" },
     Profile: { path: "/profile" },
-    EditUser: { path: "/edit-user/:id" },
-    Users: { path: "/users" },
+    EditEmployee: { path: "/edit-employee/:id" },
+    Employees: { path: "/employees" },
     UserAddresses: { path: "/user-adresses/:id" },
-    AddUser: { path: "/add-user" },
+    AddUser: { path: "/add-employee" },
     NotFound: { path: "/404" },
     ServerError: { path: "/500" },
 

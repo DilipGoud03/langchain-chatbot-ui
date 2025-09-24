@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from '@themesberg/react-bootstrap';
 
-import { UserAddressTable } from "../components/Tables";
+import { EmployeeAddressTable } from "../components/Tables";
 import { Link, useParams } from "react-router-dom";
 import { Routes } from "../routes";
 
@@ -21,7 +21,7 @@ export default () => {
           <Button as={Link} variant="primary" to={Routes.AddUser.path} >Add New</Button>
         </div>
       </div>
-      <UserAddressTable id={userId} />
+      <EmployeeAddressTable id={userId} />
     </>
   );
 };

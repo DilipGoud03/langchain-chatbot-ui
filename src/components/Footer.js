@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Card, Button, Form } from '@themesberg/react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import api from "./../axios";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+// import './Chatbot.css';  // Import custom CSS file for responsiveness
 
 export default (props) => {
   const { showChatbot, toggleChatbot } = props;
@@ -49,7 +51,7 @@ export default (props) => {
   return (
     <div>
       {showChatbot ? (
-        <Card className="theme-chatbot" style={{ width: "23pc" }}>
+        <Card className="theme-chatbot" style={{ width: "100%", maxWidth: "400px", height: "auto" }}>
           <Card.Body className="pt-4">
             <Button
               className="theme-chatbot-close"
@@ -64,7 +66,7 @@ export default (props) => {
                 💬 Chat Support
               </Card.Header>
 
-              <Card.Body style={{ height: "300px", overflowY: "auto" }}>
+              <Card.Body className="chat-body" style={{ height: "300px", overflowY: "auto" }}>
                 {error && <div className="alert alert-danger">{error}</div>}
                 {messages.map((msg, i) => (
                   <div
@@ -98,22 +100,25 @@ export default (props) => {
 
                 <div ref={messagesEndRef} />
               </Card.Body>
-              <Card.Footer className="d-flex">
-                <Form.Control
-                  type="text"
-                  placeholder="Type your message..."
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                />
-                <Button
-                  variant="primary"
-                  className="ms-2"
-                  disabled={disabled}
-                  onClick={sendMessage}
-                >
-                  Send
-                </Button>
+              <Card.Footer className="p-2">
+                <div className="d-flex w-100 gap-2">
+                  <Form.Control
+                    type="text"
+                    className="flex-grow-1"
+                    placeholder="Type your message..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                  />
+                  <Button
+                    variant="primary"
+                    disabled={disabled}
+                    onClick={sendMessage}
+                    style={{ width: "42px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                  </Button>
+                </div>
               </Card.Footer>
             </Card>
           </Card.Body>

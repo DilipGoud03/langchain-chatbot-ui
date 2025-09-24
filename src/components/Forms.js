@@ -5,7 +5,7 @@ import { Col, Row, Card, Form, Button } from '@themesberg/react-bootstrap';
 import api from './../axios'
 
 
-export const NewUserForm = () => {
+export const NewEmployeeForm = () => {
   const {
     register,
     handleSubmit,
@@ -13,20 +13,28 @@ export const NewUserForm = () => {
     reset
   } = useForm();
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const onSubmit = async (data) => {
     try {
       await api.post(`/user/signup`, data)
+      setMessage("Employee added successfully.")
       reset();
     } catch (err) {
-      setError(err.response?.data?.detail || "Update failed. Please try again.");
+      setError(err.response?.data?.detail || "Failed to Add Employee. Please try again.");
+    }
+    finally {
+      setTimeout(() => {
+        setError('');
+        setMessage('');
+      }, 3000);
     }
   };
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
-        <h5 className="mb-4">user information</h5>
+        <h5 className="mb-4">Employee information</h5>
         {error && <div className="alert alert-danger" style={{ color: "red" }}>{error}</div >}
-        {error && <div className="alert alert-info" style={{ color: "info" }}>{error}</div >}
+        {message && <div className="alert alert-info" style={{ color: "info" }}>{message}</div >}
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Row>
             <Col md={6} className="mb-3">
@@ -123,7 +131,7 @@ export const GeneralInfoForm = ({ id }) => {
       setUser(response.data);
       reset(response.data);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error fetching Employee data:", error);
     }
   };
 
@@ -135,7 +143,7 @@ export const GeneralInfoForm = ({ id }) => {
         localStorage.setItem("user", JSON.stringify(response.data));
         window.location.reload()
       }
-      setMessage('User updated sucessfully.')
+      setMessage('Employee updated sucessfully.')
     } catch (err) {
       setError(err.response?.data?.detail || "Update failed. Please try again.");
     } finally {
@@ -150,7 +158,7 @@ export const GeneralInfoForm = ({ id }) => {
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="mb-4">
-          {user.id === loggedInUser.id ? "Profile" : "User Information"}
+          {user.id === loggedInUser.id ? "Profile" : "Employee Information"}
         </h5>
 
         {error && <div className="alert alert-danger">{error}</div>}
@@ -247,7 +255,7 @@ export const NewAddressForm = ({ id }) => {
       await api.post(`/user/address`, data)
       reset();
     } catch (err) {
-      setError(err.response?.data?.detail || "Update failed. Please try again.");
+      setError(err.response?.data?.detail || "New address create failed. Please try again.");
     }
   };
   return (
@@ -336,18 +344,16 @@ export const DocumentUploadForm = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
     reset,
   } = useForm();
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const fileValue = watch("file");
-  const urlValue = watch("url");
+  const [inputType, setInputType] = useState(""); // initially nothing selected
 
   const onSubmit = async (data) => {
     try {
-      if (data.file?.[0]) {
+      if (inputType === "file" && data.file?.[0]) {
         const formData = new FormData();
         formData.append("file", data.file[0]);
         formData.append("type", data.type);
@@ -357,16 +363,18 @@ export const DocumentUploadForm = () => {
         });
         setMessage("Document Uploaded Successfully.");
 
-      } else if (data.url) {
+      } else if (inputType === "url" && data.url) {
         await api.post("/doc/url/upload", {
           url: data.url,
           type: data.type,
         });
         setMessage("URL Uploaded Successfully.");
       } else {
-        throw new Error("Either file or URL is required");
+        throw new Error("Please select File or URL and provide input");
       }
+
       reset();
+      setInputType("");
     } catch (err) {
       setError(err.response?.data?.detail || "Upload failed. Please try again.");
     } finally {
@@ -376,81 +384,116 @@ export const DocumentUploadForm = () => {
       }, 3000);
     }
   };
+
   return (
     <Card border="light" className="bg-white shadow-sm mb-4">
       <Card.Body>
         <h5 className="mb-4">Documents information</h5>
-        {error && <div className="alert alert-danger" style={{ color: "red" }}>{error}</div >}
-        {message && <div className="alert alert-info" style={{ color: "info" }}>{message}</div >}
+        {error && <div className="alert alert-danger">{error}</div>}
+        {message && <div className="alert alert-success">{message}</div>}
+
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="file">
-                <Form.Label>File</Form.Label>
-                <Form.Control required type="file" placeholder="Enter your full name"
-                  disabled={!!urlValue}
-                  {...register("file", {
-                    validate: () => {
-                      if (!urlValue && (!fileValue || fileValue.length === 0)) {
-                        return "Either File or URL is required";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.file && (
-                  <div style={{ color: "red" }} className="form-text">
-                    {errors.file.message}
-                  </div>
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6} className="mb-3">
-              <Form.Group id="url">
-                <Form.Label>URL</Form.Label>
-                <Form.Control required type="url"
-                  disabled={!!fileValue?.length}
-                  {...register("url", {
-                    validate: () => {
-                      if (!fileValue?.length && !urlValue) {
-                        return "Either File or URL is required";
-                      }
-                      return true;
-                    },
-                  })}
-                />
-                {errors.url && (
-                  <div style={{ color: "red" }} className="form-text">
-                    {errors.url.message}
-                  </div>
-                )}
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row className="align-items-center">
-            <Col md={6} className="mb-3">
-              <Form.Group id="Type">
-                <Form.Label>Type</Form.Label>
+          {/* Step 1: Select Input Type */}
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group controlId="inputType">
+                <Form.Label>Select Your Input</Form.Label>
                 <Form.Select
-                  defaultValue='public'
-                  {...register("type", { required: true })}
+                  value={inputType}
+                  onChange={(e) => setInputType(e.target.value)}
                 >
-                  <option value="private">Private</option>
-                  <option value="public">Public</option>
+                  <option value="">-- Select Input Type --</option>
+                  <option value="file">Document</option>
+                  <option value="url">URL</option>
                 </Form.Select>
-                {errors.type && (
-                  <div style={{ color: "red" }} className="form-text">
-                    *Type* is mandatory
-                  </div>
-                )}
               </Form.Group>
             </Col>
           </Row>
-          <div className="mt-3">
-            <Button variant="primary" type="submit">Save</Button>
-          </div>
+          {inputType && (
+            <>
+              <Row className="align-items-center">
+                <Col md={6} className="mb-3">
+                  <Form.Group controlId="type">
+                    {inputType === 'file' ? (
+                      <>
+                        <Form.Label>Document Type</Form.Label>
+                      </>
+                    ) : (<>
+                      <Form.Label>URL Type</Form.Label>
+                    </>)}
+                    <Form.Select
+                      defaultValue="public"
+                      {...register("type", { required: true })}
+                    >
+                      <option value="private">Private</option>
+                      <option value="public">Public</option>
+                    </Form.Select>
+                    {errors.type && (
+                      <div style={{ color: "red" }} className="form-text">
+                        *Type* is mandatory
+                      </div>
+                    )}
+                  </Form.Group>
+                </Col>
+              </Row>
+            </>
+          )}
+
+          {/* Step 2: Show corresponding input */}
+          {inputType === "file" && (
+            <Row>
+              <Col md={6} className="mb-3">
+                <Form.Group controlId="file">
+                  <Form.Label>Document</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept=".pdf,.docx,.csv,.txt"
+                    {...register("file", {
+                      required: "File is required",
+                    })}
+                  />
+                  {errors.file && (
+                    <div style={{ color: "red" }} className="form-text">
+                      {errors.file.message}
+                    </div>
+                  )}
+                </Form.Group>
+              </Col>
+            </Row>
+          )}
+
+          {inputType === "url" && (
+            <Row>
+              <Col md={6} className="mb-3">
+                <Form.Group controlId="url">
+                  <Form.Label>URL</Form.Label>
+                  <Form.Control
+                    type="url"
+                    placeholder="https://example.com"
+                    {...register("url", {
+                      required: "URL is required",
+                    })}
+                  />
+                  {errors.url && (
+                    <div style={{ color: "red" }} className="form-text">
+                      {errors.url.message}
+                    </div>
+                  )}
+                </Form.Group>
+              </Col>
+            </Row>
+          )}
+
+          {/* Step 3: Show Type + Save only if something is selected */}
+          {inputType && (
+            <>
+              <div className="mt-3">
+                <Button variant="primary" type="submit">
+                  Save
+                </Button>
+              </div>
+            </>
+          )}
         </Form>
       </Card.Body>
     </Card>

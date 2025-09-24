@@ -15,7 +15,7 @@ const Navbars = () => {
         {loggedInUser && user ? (
           <div className="d-flex justify-content-between w-100">
             <div className="d-flex align-items-center">
-              <div className="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+              <div className="media-body ms-2 text-dark align-items-center">
                 <FontAwesomeIcon icon={faUser} />
                 <span className="mb-0 font-small fw-bold"><b> {user.name}</b></span>
                 <span className="mb-0 font-small fw-bold"><b> ({user.user_type})</b></span>

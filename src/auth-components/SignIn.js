@@ -94,7 +94,7 @@ function SignIn() {
                   </Button>
                 </Form>
 
-                <div className="mt-3 text-center">
+                {/* <div className="mt-3 text-center">
                   <span className="fw-normal">or</span>
                 </div>
                 <div className="d-flex justify-content-center align-items-center">
@@ -104,7 +104,7 @@ function SignIn() {
                       {` Create account `}
                     </Card.Link>
                   </span>
-                </div>
+                </div> */}
               </div>
             </Col>
           </Row>
