@@ -18,7 +18,7 @@ export default () => {
           <p className="mb-0">Your web analytics dashboard template.</p>
         </div>
         <div className="mt-3">
-          <Button as={Link} variant="primary" to={Routes.AddUser.path} >Add New</Button>
+          <Button as={Link} variant="primary" to={Routes.AddEmployee.path} >Add New</Button>
         </div>
       </div>
       <EmployeeAddressTable id={userId} />

@@ -13,7 +13,7 @@ export default () => {
           <h4>Employees</h4>
         </div>
         <div className="mt-3">
-          <Button as={Link} variant="primary" to={Routes.AddUser.path} >Add New</Button>
+          <Button as={Link} variant="primary" to={Routes.AddEmployee.path} >Add New</Button>
         </div>
       </div>
       <EmployeesTable />
